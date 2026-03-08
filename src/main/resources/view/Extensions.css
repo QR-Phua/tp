@@ -1,20 +1,48 @@
+/* ============================================================
+   Extensions.css  —  Light & Airy Glass Morphism Theme
+   Additional styles for MainWindow components
+   ============================================================ */
 
 .error {
-    -fx-text-fill: #d06651 !important; /* The error class should always override the default text-fill style */
+    /* Error text with vibrant coral-red for light theme */
+    -fx-text-fill: #d93651 !important;
+    -fx-effect: dropshadow(gaussian, rgba(217, 54, 81, 0.25), 6, 0.3, 0, 0);
 }
 
 .list-cell:empty {
-    /* Empty cells will not have alternating colours */
-    -fx-background: #383838;
+    /* Empty cells with transparent light glass background */
+    -fx-background: rgba(255, 250, 245, 0.30);
 }
 
 .tag-selector {
-    -fx-border-width: 1;
-    -fx-border-color: white;
-    -fx-border-radius: 3;
-    -fx-background-radius: 3;
+    /* Modern frosted glass tag selector */
+    -fx-border-width: 1px;
+    -fx-border-color: rgba(200, 170, 230, 0.55);
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-background-color: rgba(245, 240, 255, 0.60);
+    -fx-effect: dropshadow(gaussian, rgba(180, 150, 210, 0.20), 6, 0.2, 0, 1);
 }
 
 .tooltip-text {
-    -fx-text-fill: white;
+    /* Tooltip text with soft purple color */
+    -fx-text-fill: #2d1f45;
+    -fx-font-family: "SF Pro", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 13px;
+}
+
+/* Add consistent, subtle elevation for components to read as glass cards */
+.stack-pane,
+.pane-with-border,
+.list-cell,
+.table-row-cell,
+.tag-selector {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 4);
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+}
+
+/* Slight emphasis for error text blocks if used in a container */
+.error {
+    -fx-effect: dropshadow(gaussian, rgba(217,54,81,0.12), 6, 0.2, 0, 2);
 }
