@@ -1,20 +1,21 @@
 package seedu.address.model.person;
 
 import java.util.function.Predicate;
+
 /**
  * Tests whether a {@code Person}'s rate matches the specified rate.
  */
 public class RateEqualsPredicate implements Predicate<Person> {
 
-    private final int rate;
+    private final Rate rate;
 
-    public RateEqualsPredicate(int rate) {
+    public RateEqualsPredicate(Rate rate) {
         this.rate = rate;
     }
 
     @Override
     public boolean test(Person person) {
-        return person.getRate().rate.equals(String.valueOf(rate));
+        return person.getRate().equals(rate);
     }
 
     @Override
@@ -26,6 +27,6 @@ public class RateEqualsPredicate implements Predicate<Person> {
             return false;
         }
         RateEqualsPredicate otherPredicate = (RateEqualsPredicate) other;
-        return rate == otherPredicate.rate;
+        return rate.equals(otherPredicate.rate);
     }
 }

@@ -9,25 +9,28 @@ import java.util.Arrays;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.person.Rate;
 import seedu.address.model.person.RateEqualsPredicate;
 
 /**
- * Parses input arguments and creates a new FindCommand object
+ * Parses input arguments and creates a new FindCommand object.
  */
 public class FindCommandParser implements Parser<FindCommand> {
 
     /**
      * Parses the given {@code String} of arguments in the context of the FindCommand
      * and returns a FindCommand object for execution.
+     *
      * @throws ParseException if the user input does not conform the expected format
      */
     public FindCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_RATE);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_RATE);
 
         boolean hasName = argMultimap.getValue(PREFIX_NAME).isPresent();
         boolean hasRate = argMultimap.getValue(PREFIX_RATE).isPresent();
 
-        if (hasName == hasRate) {
+        if (!argMultimap.getPreamble().isEmpty() || hasName == hasRate) {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
         }
@@ -46,16 +49,10 @@ public class FindCommandParser implements Parser<FindCommand> {
 
         String rateArgs = argMultimap.getValue(PREFIX_RATE).get().trim();
 
-        if (rateArgs.isEmpty()) {
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
+        if (rateArgs.isEmpty() || !Rate.isValidRate(rateArgs)) {
+            throw new ParseException(Rate.MESSAGE_CONSTRAINTS);
         }
 
-        try {
-            int rate = Integer.parseInt(rateArgs);
-            return new FindCommand(new RateEqualsPredicate(rate));
-        } catch (NumberFormatException e) {
-            throw new ParseException("Rate must be a valid integer.");
-        }
+        return new FindCommand(new RateEqualsPredicate(new Rate(rateArgs)));
     }
 }
