@@ -42,6 +42,9 @@ public class CommandResult {
         this(feedbackToUser, false, false);
     }
 
+    /**
+     * Constructs a {@code CommandResult} with the specified {@code feedbackToUser} and list of found persons.
+     */
     public CommandResult(String feedbackToUser, List<PersonIndexPair> foundPersons) {
         this.feedbackToUser = requireNonNull(feedbackToUser);
         this.showHelp = false;
@@ -100,10 +103,16 @@ public class CommandResult {
         return builder.toString();
     }
 
+    /**
+     * Represents a pair of a person and their original index in the full list.
+     */
     public static class PersonIndexPair {
         public final Person person;
         public final int index;
 
+        /**
+         * Constructs a {@code PersonIndexPair} with the specified person and index.
+         */
         public PersonIndexPair(Person person, int index) {
             this.person = person;
             this.index = index;

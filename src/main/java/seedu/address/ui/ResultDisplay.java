@@ -2,6 +2,8 @@ package seedu.address.ui;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
@@ -23,6 +25,9 @@ public class ResultDisplay extends UiPart<Region> {
     @FXML
     private ListView<PersonIndexPair> resultListView;
 
+    /**
+     * Creates a {@code ResultDisplay} with the given {@code FXML} file.
+     */
     public ResultDisplay() {
         super(FXML);
         resultListView.setCellFactory(listView -> new ResultListViewCell());
@@ -35,7 +40,10 @@ public class ResultDisplay extends UiPart<Region> {
         resultListView.setVisible(false);
     }
 
-    public void setPersonList(java.util.List<PersonIndexPair> persons) {
+    /**
+     * Sets the list of persons to display in the result box.
+     */
+    public void setPersonList(List<PersonIndexPair> persons) {
         requireNonNull(persons);
         resultListView.setItems(FXCollections.observableArrayList(persons));
         resultListView.setVisible(true);
