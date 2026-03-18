@@ -53,11 +53,18 @@ public class PersonCard extends UiPart<Region> {
         this.person = person;
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
-        phone.setText(person.getPhone().value);
-        address.setText(person.getAddress().value);
-        subject.setText(person.getSubject().subject);
-        rate.setText(person.getRate().rate);
-        email.setText(person.getEmail().value);
+        phone.setText("Phone Number: " + person.getPhone().value);
+
+        boolean hasAddress = person.getAddress().value != null;
+        if (hasAddress) {
+            address.setText("Address: " + person.getAddress().value);
+        } else {
+            address.setText("Address: Not Provided");
+        }
+
+        subject.setText("Subject: " + person.getSubject().subject);
+        rate.setText("Hourly Payment Rate: " + person.getRate().rate);
+        email.setText("Email Address: " + person.getEmail().value);
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));

@@ -31,6 +31,9 @@ public class ResultDisplay extends UiPart<Region> {
     public ResultDisplay() {
         super(FXML);
         resultListView.setCellFactory(listView -> new ResultListViewCell());
+        if (resultDisplay != null) {
+            resultDisplay.setWrapText(true);
+        }
     }
 
     public void setFeedbackToUser(String feedbackToUser) {
