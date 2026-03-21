@@ -1,0 +1,48 @@
+package seedu.address.storage;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.model.person.Subject;
+
+/**
+ * Jackson-friendly version of {@link Subject}.
+ */
+public class JsonAdaptedSubject {
+
+    private final String subject;
+
+    /**
+     * Constructs a {@code JsonAdaptedsubject} with the given {@code subject}.
+     */
+    @JsonCreator
+    public JsonAdaptedSubject(String subject) {
+        this.subject = subject;
+    }
+
+    /**
+     * Converts a given {@code subject} into this class for Jackson use.
+     */
+    public JsonAdaptedSubject(Subject source) {
+        subject = source.subject;
+    }
+
+    @JsonValue
+    public String getsubjectName() {
+        return subject;
+    }
+
+    /**
+     * Converts this Jackson-friendly adapted subject object into the model's {@code Subject} object.
+     *
+     * @throws IllegalValueException if there were any data constraints violated in the adapted subject.
+     */
+    public Subject toModelType() throws IllegalValueException {
+        if (!Subject.isValidSubject(subject)) {
+            throw new IllegalValueException(Subject.MESSAGE_CONSTRAINTS);
+        }
+        return new Subject(subject);
+    }
+
+}
