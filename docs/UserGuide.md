@@ -270,23 +270,25 @@ Displays all tutor profiles stored in Tuto.
 ---
 ### Finding Tutors : `find`
 
-Searches for tutors by name, subject, or hourly rate.
+Searches for tutors by name, subject, or hourly rate. Can combine prefixes (`n/`, `s/`, `r/`) in one command.
 
-**Format:**
-```
-find n/NAME_KEYWORD [MORE_NAME_KEYWORDS]
-find s/SUBJECT
-find r/RATE
-```
+| Prefix | Description | Behaviour                                                                                                               | Example                                          |
+|--------|------------|-------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| `n/NAME_KEYWORD [MORE_NAME_KEYWORDS]` (Name) | Search by tutor name | - Multiple keywords allowed (space-separated)<br>- Case-insensitive<br>- Prefix matching<br>- Only **one `n/` allowed** | `find n/Hans` |
+| `s/SUBJECT` (Subject) | Search by subject taught | - Multiple `s/` prefixes allowed<br>- Case-insensitive<br>- Prefix matching<br>                                         | `find s/math s/science`                          |
+| `r/RATE` (Rate) | Search by hourly rate | - Matches **exact rate**<br>- Only **one `r/` allowed**                                                                 | `find r/50`                                      |
 
-* Only **one search prefix** (`n/`, `s/`, or `r/`) can be used per command.
-* Name searches are **case-insensitive** and match full words only.<br>
-  e.g. `find n/Hans` will match `Hans Gruber` but not `Hansen`.
-* Multiple name keywords return tutors matching **any** of the keywords (OR logic).<br>
-  e.g. `find n/Hans Bo` returns all tutors named Hans or Bo.
-* Subject searches return tutors whose subject matches exactly (case-insensitive).
-* Rate searches return tutors whose rate matches exactly.
-* Spaces after the prefix are optional: `find n/John` and `find n/ John` both work.
+- Name and subject searches support **prefix-based matching**
+  - e.g. `find n/Han` matches "Hans"
+  - e.g. `find s/Mat` matches "Math", "Mathematics"
+- Multiple name keywords return tutors matching any of the keywords (OR logic). 
+  - e.g. `find n/Han Bo` returns all tutors with names starting with "Han" or "Bo" (e.g. "Hans", "Bo").
+- Spaces after prefixes are optional (`find n/John` and `find n/ John` both work)
+- When different prefixes are used together, tutors must match **all conditions**  
+  (e.g. `find n/Alex r/40 s/Math` returns tutors named Alex, charging 40, and teaching Math)
+- **Invalid usage**
+  - Multiple `r/` → ❌ `find r/16 r/17`
+  - Multiple `n/` → ❌ `find n/Alice n/Bob`
 
 <box type="tip" seamless>
 
@@ -294,34 +296,34 @@ find r/RATE
 
 </box>
 
+---
 **Examples:**
 
-```
-find n/John
-```
-Returns all tutors with "John" in their name, e.g. `John Doe`, `John Tan`.
+`find n/John`  
+Returns all tutors with "John" in their name.
 
-```
-find s/Mathematics
-```
-Returns all tutors who teach Mathematics.
+`find s/Mathematics`  
+Returns tutors who teach Mathematics.
 
-```
-find r/50
-```
-Returns all tutors charging exactly $50/hr.
+`find s/Math s/Science`  
+Returns tutors who teach Math **AND** Science.
 
-```
-find n/Alex David
-```
-Returns tutors named Alex or David.
+`find r/50`  
+Returns tutors charging exactly $50/hr.
+
+`find n/Alex r/40 s/Physics`  
+Returns tutors named Alex, charging $40, **AND** teaching Physics.
 
 ![Result for 'find n/alex david'](images/findAlexDavidResult.png)
 
 **Expected output:**
+If there are matching tutors, it will show only matching tutors. 
+
+Else, will display:
 ```
-2 persons listed!
+0 persons listed!
 ```
+
 
 ---
 
