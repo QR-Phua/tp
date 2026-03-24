@@ -43,6 +43,7 @@ This guide is written for parents who are comfortable using a keyboard and want 
   - [FAQ](#faq)
   - [Known Issues](#known-issues)
   - [Command Summary](#command-summary)
+- [| **Exit** | `exit` | `exit` |](#-exit--exit--exit-)
 ---
 
 ## Quick Start
@@ -491,7 +492,7 @@ A: The Help Window may be minimised. Check your taskbar and restore it manually.
 | Action | Format | Example |
 |---|---|---|
 | **Help** | `help` | `help` |
-| **Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTn r/RATE [a/ADDRESS] [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 s/Biology r/45 t/friend t/colleague`|
+| **Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTn r/RATE [a/ADDRESS] [t/TAG]…​` | `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 s/Biology r/45 t/friend t/colleague` |
 | **List** | `list` | `list` |
 | **Sort** | `sort FIELD ORDER` | `sort name asc`, `sort rate desc` |
 | **Edit** | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT] [r/RATE] [t/TAG]…` | `edit 2 n/James Lee e/james@example.com` |
