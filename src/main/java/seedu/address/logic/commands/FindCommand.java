@@ -15,7 +15,8 @@ import seedu.address.model.Model;
 import seedu.address.model.person.Person;
 
 /**
- * Finds and lists all persons in address book whose name contains any of the argument keywords.
+ * Finds and lists all persons in address book whose name contains any of the
+ * argument keywords.
  * Keyword matching is case insensitive.
  */
 public class FindCommand extends Command {
@@ -44,6 +45,7 @@ public class FindCommand extends Command {
     public CommandResult execute(Model model) {
         requireNonNull(model);
         model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
+        ObservableList<Person> displayedPersons = model.getFilteredPersonList();
         ObservableList<Person> allPersons = model.getAddressBook().getPersonList();
         List<Person> foundPersons = allPersons.stream()
                 .filter(predicate)
@@ -54,7 +56,8 @@ public class FindCommand extends Command {
         sb.append(String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, foundPersons.size()));
 
         for (Person p : foundPersons) {
-            int index = allPersons.indexOf(p) + 1;
+            // Index is based on the displayed list, not the all persons list.
+            int index = displayedPersons.indexOf(p) + 1;
             sb.append("\n").append(index).append(". ").append(Messages.format(p));
             foundPersonIndices.add(new PersonIndexPair(p, index));
         }

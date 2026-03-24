@@ -27,7 +27,8 @@ import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 
 /**
- * Contains integration tests (interaction with the Model) for {@code FindCommand}.
+ * Contains integration tests (interaction with the Model) for
+ * {@code FindCommand}.
  */
 public class FindCommandTest {
     private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
@@ -35,10 +36,10 @@ public class FindCommandTest {
 
     @Test
     public void equals() {
-        NameContainsKeywordsPredicate firstPredicate =
-                new NameContainsKeywordsPredicate(Collections.singletonList("first"));
-        NameContainsKeywordsPredicate secondPredicate =
-                new NameContainsKeywordsPredicate(Collections.singletonList("second"));
+        NameContainsKeywordsPredicate firstPredicate = new NameContainsKeywordsPredicate(
+                Collections.singletonList("first"));
+        NameContainsKeywordsPredicate secondPredicate = new NameContainsKeywordsPredicate(
+                Collections.singletonList("second"));
 
         FindCommand findFirstCommand = new FindCommand(firstPredicate);
         FindCommand findSecondCommand = new FindCommand(secondPredicate);
@@ -81,12 +82,13 @@ public class FindCommandTest {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, foundPersons.size()));
 
-        // We know the typical address book structure, so we can hardcode or lookup indices
-        // CARL is index 3 (0-based 2), ELLE is 5 (4), FIONA is 6 (5) in TypicalPersons (based on name order?)
-        // Let's rely on model's list to be safe.
-        List<Person> allPersons = expectedModel.getAddressBook().getPersonList();
+        // Indices must match the displayed list (filtered + sorted), same as
+        // FindCommand. This is because of how sortedPersons is implemented - which
+        // leads to an index mismatch if not updated.
+        expectedModel.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        List<Person> displayedPersons = expectedModel.getFilteredPersonList();
         for (Person p : foundPersons) {
-            int index = allPersons.indexOf(p) + 1;
+            int index = displayedPersons.indexOf(p) + 1;
             sb.append("\n").append(index).append(". ").append(Messages.format(p));
             expectedPairs.add(new PersonIndexPair(p, index));
         }
@@ -96,7 +98,6 @@ public class FindCommandTest {
 
         NameContainsKeywordsPredicate predicate = preparePredicate("Kurz Elle Kunz");
         FindCommand command = new FindCommand(predicate);
-        expectedModel.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
         assertCommandSuccess(command, model, expectedCommandResult, expectedModel);
         assertEquals(expectedModel.getFilteredPersonList(), model.getFilteredPersonList());
