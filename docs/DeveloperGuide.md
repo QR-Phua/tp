@@ -131,7 +131,7 @@ The `find` command allows users to filter the displayed person list based on the
 
 The diagram below shows the parser classes involved in handling the `find` command.
 
-<puml src="diagrams/FindParserClassDiagram.puml" width="500" />
+<puml src="diagrams/FindParserClassDiagram.puml" width="500"></puml>
 
 When the user enters a `find` command, `AddressBookParser` identifies the command word and creates a `FindCommandParser`.  
 `FindCommandParser` then parses the input arguments and constructs a `FindCommand`, which is returned as a `Command` object for execution.
@@ -139,7 +139,6 @@ When the user enters a `find` command, `AddressBookParser` identifies the comman
 Upon execution, `FindCommand` calls `Model#updateFilteredPersonList(...)` to update the displayed list according to the given predicate.
 
 The `find` command can support different forms of filtering through different predicates, making the search functionality flexible and extensible.
-
 ### Model component
 
 **API** : [`Model.java`](https://github.com/AY2526S2-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/model/Model.java)
