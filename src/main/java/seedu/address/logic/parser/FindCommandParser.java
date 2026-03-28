@@ -54,8 +54,9 @@ public class FindCommandParser implements Parser<FindCommand> {
 
         // Build the combined predicate in a single helper to keep this method high-level.
         Predicate<Person> combinedPredicate = buildCombinedPredicate(argMultimap);
+        String findDescription = buildFindDescription(argMultimap);
 
-        return new FindCommand(combinedPredicate);
+        return new FindCommand(combinedPredicate, findDescription);
     }
 
     /**
@@ -87,6 +88,36 @@ public class FindCommandParser implements Parser<FindCommand> {
         }
 
         return combinedPredicate;
+    }
+
+    private String buildFindDescription(ArgumentMultimap argMultimap) {
+        String preamble = argMultimap.getPreamble().trim();
+
+        if (!preamble.isEmpty()) {
+            return "Find results for universal search: '" + preamble + "'";
+        }
+
+        if (argMultimap.getValue(PREFIX_NAME).isPresent()) {
+            String nameValue = argMultimap.getValue(PREFIX_NAME).get().trim();
+            return "Find results for name: '" + nameValue + "'";
+        }
+
+        if (!argMultimap.getAllValues(PREFIX_SUBJECT).isEmpty()) {
+            String subjectValue = String.join(", ", argMultimap.getAllValues(PREFIX_SUBJECT));
+            return "Find results for subject: '" + subjectValue + "'";
+        }
+
+        if (argMultimap.getValue(PREFIX_RATE).isPresent()) {
+            String rateValue = argMultimap.getValue(PREFIX_RATE).get().trim();
+            return "Find results for hourly payment rate: '" + rateValue + "'";
+        }
+
+        if (!argMultimap.getAllValues(PREFIX_TAG).isEmpty()) {
+            String tagValue = String.join(", ", argMultimap.getAllValues(PREFIX_TAG));
+            return "This is your find result for tag: '" + tagValue + "'";
+        }
+
+        return "";
     }
 
     private ArgumentMultimap tokenizeAndValidate(String args) throws ParseException {

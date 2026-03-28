@@ -40,9 +40,11 @@ public class FindCommand extends Command {
             + COMMAND_WORD + " n/Alex r/15 s/Chemistry";
 
     private final Predicate<Person> predicate;
+    private final String findDescription;
 
-    public FindCommand(Predicate<Person> predicate) {
+    public FindCommand(Predicate<Person> predicate, String findDescription) {
         this.predicate = predicate;
+        this.findDescription = findDescription == null ? "" : findDescription;
     }
 
     public Predicate<Person> getPredicate() {
@@ -78,6 +80,11 @@ public class FindCommand extends Command {
 
     private String buildResultMessage(List<PersonIndexPair> pairs) {
         StringBuilder sb = new StringBuilder();
+
+        if (findDescription != null && !findDescription.isEmpty()) {
+            sb.append(findDescription).append("\n");
+        }
+
         sb.append(String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, pairs.size()));
 
         for (PersonIndexPair pair : pairs) {
@@ -108,6 +115,7 @@ public class FindCommand extends Command {
     public String toString() {
         return new ToStringBuilder(this)
                 .add("predicate", predicate)
+                .add("findDescription", findDescription)
                 .toString();
     }
 }
