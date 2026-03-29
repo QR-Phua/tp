@@ -30,7 +30,7 @@ activate AddCommandParser
 AddCommandParser -> AddCommandParser : parse(arguments)
 
 create Person
-AddCommandParser -> Person: <<create>>Person()
+AddCommandParser -> Person: Person()
 activate Person
 Person --> AddCommandParser: person
 deactivate Person
