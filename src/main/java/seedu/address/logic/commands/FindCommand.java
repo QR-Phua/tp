@@ -66,18 +66,6 @@ public class FindCommand extends Command {
         return predicate;
     }
 
-    @Override
-    public CommandResult execute(Model model) {
-        requireNonNull(model);
-        model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
-        ObservableList<Person> displayedPersons = model.getFilteredPersonList();
-        List<Person> foundPersons = getFoundPersons(displayedPersons);
-        List<PersonIndexPair> foundPersonIndices = getPersonIndices(foundPersons, displayedPersons);
-        String resultMessage = buildResultMessage(foundPersonIndices);
-
-        return new CommandResult(resultMessage, foundPersonIndices);
-    }
-
     private List<Person> getFoundPersons(ObservableList<Person> allPersons) {
         return allPersons.stream()
                 .filter(predicate)
@@ -93,13 +81,25 @@ public class FindCommand extends Command {
         return pairs;
     }
 
-    private String buildResultMessage(List<PersonIndexPair> pairs) {
-        String count = String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, pairs.size());
+    private String buildResultCount(List<PersonIndexPair> pairs) {
+        return String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, pairs.size());
+    }
 
+    @Override
+    public CommandResult execute(Model model) {
+        requireNonNull(model);
+        model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
+        ObservableList<Person> displayedPersons = model.getFilteredPersonList();
+        List<Person> foundPersons = getFoundPersons(displayedPersons);
+        List<PersonIndexPair> foundPersonIndices = getPersonIndices(foundPersons, displayedPersons);
+        String countMessage = buildResultCount(foundPersonIndices);
+
+        String description = "";
         if (findDescription != null && !findDescription.isEmpty()) {
-            return "Find results for:\n" + findDescription + "\n" + count;
+            description = "Find results for:\n" + findDescription;
         }
-        return count;
+
+        return new CommandResult(countMessage, foundPersonIndices, description);
     }
 
     @Override

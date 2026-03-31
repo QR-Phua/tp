@@ -6,10 +6,12 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import seedu.address.logic.commands.CommandResult.PersonIndexPair;
 
 /**
@@ -26,7 +28,10 @@ public class ResultDisplay extends UiPart<Region> {
     private ListView<PersonIndexPair> resultListView;
 
     @FXML
-    private TextArea resultDescriptionDisplay;
+    private Label resultDescriptionDisplay;
+
+    @FXML
+    private VBox resultListContainer;
 
     /**
      * Creates a {@code ResultDisplay} with the given {@code FXML} file.
@@ -41,14 +46,10 @@ public class ResultDisplay extends UiPart<Region> {
 
     public void setFeedbackToUser(String feedbackToUser) {
         requireNonNull(feedbackToUser);
-
         resultDisplay.setText(feedbackToUser);
         resultDisplay.setVisible(true);
-
-        resultListView.setVisible(false);
+        resultListContainer.setVisible(false);
         resultListView.getItems().clear();
-
-        updateDescriptionDisplay("");
     }
 
     /**
@@ -56,14 +57,20 @@ public class ResultDisplay extends UiPart<Region> {
      */
     public void setPersonList(List<PersonIndexPair> persons, String description) {
         requireNonNull(persons);
-
-        resultListView.setItems(FXCollections.observableArrayList(persons));
-        resultListView.setVisible(true);
-
         resultDisplay.setVisible(false);
-        resultDisplay.setText("");
-
         updateDescriptionDisplay(description);
+        
+        resultListView.setItems(FXCollections.observableArrayList(persons));
+        
+        if (persons.isEmpty()) {
+            Label placeholder = new Label("No tutors found.");
+            placeholder.setStyle("-fx-text-fill: grey; -fx-alignment: center; -fx-padding: 20;");
+            resultListView.setPlaceholder(placeholder);
+        } else {
+            resultListView.setPlaceholder(null);
+        }
+        
+        resultListContainer.setVisible(true);
     }
 
     private void updateDescriptionDisplay(String description) {

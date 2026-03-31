@@ -173,10 +173,10 @@ public class MainWindow extends UiPart<Stage> {
             logger.info("Result: " + commandResult.getFeedbackToUser());
             personListPanel.refreshHeaderLabels();
 
-            if (commandResult.getFoundPersons().isPresent() && !commandResult.getFoundPersons().get().isEmpty()) {
+            if (commandResult.getFoundPersons().isPresent()) {
                 resultDisplay.setPersonList(
                         commandResult.getFoundPersons().get(),
-                        commandResult.getFeedbackToUser()
+                        commandResult.getDescription().orElse("")
                 );
             } else {
                 resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
