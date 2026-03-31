@@ -35,14 +35,22 @@ public class PersonListPanel extends UiPart<Region> {
         super(FXML);
         this.logic = logic;
         this.displayedPersons = logic.getFilteredPersonList();
+
+        initializeListView();
+        initializeHeaderListeners();
+        updateHeaderLabels();
+    }
+
+    private void initializeListView() {
         personListView.setItems(displayedPersons);
         personListView.setCellFactory(listView -> new PersonListViewCell());
+    }
 
+    private void initializeHeaderListeners() {
         ObservableList<Person> allPersons = logic.getAddressBook().getPersonList();
         ListChangeListener<Person> headerRefreshListener = c -> updateHeaderLabels();
         allPersons.addListener(headerRefreshListener);
         displayedPersons.addListener(headerRefreshListener);
-        updateHeaderLabels();
     }
 
     /**
@@ -53,15 +61,19 @@ public class PersonListPanel extends UiPart<Region> {
     }
 
     private void updateHeaderLabels() {
-        int n = logic.getAddressBook().getPersonList().size();
-        if (n == 0) {
-            contactHeaderLabel.setText("No Contacts Yet");
-        } else if (n == 1) {
-            contactHeaderLabel.setText("Tuto: 1 Contact");
-        } else {
-            contactHeaderLabel.setText("Tuto: " + n + " Contacts");
-        }
+        int totalContacts = logic.getAddressBook().getPersonList().size();
+        contactHeaderLabel.setText(getContactHeaderTitle(totalContacts));
         sortHeaderLabel.setText(logic.getDisplayedListSortDescription());
+    }
+
+    private String getContactHeaderTitle(int numContacts) {
+        if (numContacts == 0) {
+            return "No Contacts Yet";
+        } else if (numContacts == 1) {
+            return "Tuto has 1 Contact";
+        } else {
+            return "Tuto have " + numContacts + " Contacts";
+        }
     }
 
     /**
