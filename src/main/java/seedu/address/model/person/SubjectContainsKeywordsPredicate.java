@@ -1,5 +1,6 @@
 package seedu.address.model.person;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -50,7 +51,8 @@ public class SubjectContainsKeywordsPredicate implements Predicate<Person> {
     private boolean hasSubjectMatchingKeywordLower(List<String> personSubjectsLower, String keyword) {
         String kwLower = keyword == null ? "" : keyword.toLowerCase();
         return personSubjectsLower.stream()
-                .anyMatch(personSubject -> personSubject.startsWith(kwLower));
+                .anyMatch(personSubject -> Arrays.stream(personSubject.split("\\s+"))
+                        .anyMatch(word -> word.startsWith(kwLower)));
     }
 
     @Override

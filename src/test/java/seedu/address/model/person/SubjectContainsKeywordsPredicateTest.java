@@ -49,6 +49,10 @@ public class SubjectContainsKeywordsPredicateTest {
                 new SubjectContainsKeywordsPredicate(Collections.singletonList("Math"));
         assertTrue(predicate.test(new PersonBuilder().withSubject("Math").build()));
 
+        // Substring keyword (contains)
+        predicate = new SubjectContainsKeywordsPredicate(Collections.singletonList("Math"));
+        assertTrue(predicate.test(new PersonBuilder().withSubject("Advanced Math").build()));
+
         // Multiple keywords (AND)
         predicate = new SubjectContainsKeywordsPredicate(Arrays.asList("Math", "Physics"));
         assertTrue(predicate.test(new PersonBuilder().withSubject("Math", "Physics").build()));
@@ -63,6 +67,10 @@ public class SubjectContainsKeywordsPredicateTest {
         // Zero keywords
         SubjectContainsKeywordsPredicate predicate = new SubjectContainsKeywordsPredicate(Collections.emptyList());
         assertFalse(predicate.test(new PersonBuilder().withSubject("Math").build()));
+
+        // Non-matching prefix
+        predicate = new SubjectContainsKeywordsPredicate(Collections.singletonList("g"));
+        assertFalse(predicate.test(new PersonBuilder().withSubject("Biology").build()));
 
         // Non-matching keyword
         predicate = new SubjectContainsKeywordsPredicate(Arrays.asList("Physics"));
