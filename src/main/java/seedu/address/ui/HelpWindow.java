@@ -23,7 +23,7 @@ public class HelpWindow extends UiPart<Stage> {
             + "Emails should be of the format local-part@domain and adhere to standard constraints.\n"
             + "Addresses can take any values.\n"
             + "Rates should only contain numbers, and it should not be blank.\n"
-            + "Subjects should only contain alphabetical characters and spaces, and it should not be blank.\n"
+            + "Subjects should only contain alphanumeric characters and spaces, and it should not be blank.\n"
             + "Tags names should be alphanumeric.";
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
