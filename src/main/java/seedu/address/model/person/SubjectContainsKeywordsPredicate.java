@@ -55,12 +55,11 @@ public class SubjectContainsKeywordsPredicate implements Predicate<Person> {
     }
 
     private boolean hasSubjectMatchingKeywordLower(List<String> personSubjectsLower, String keyword) {
-        String kwLower;
-        if (keyword == null) {
-            kwLower = "";
-        } else {
-            kwLower = keyword.toLowerCase().trim().replaceAll("\\s+", " ");
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return false;
         }
+        
+        String kwLower = keyword.toLowerCase().trim().replaceAll("\\s+", " ");
 
         return personSubjectsLower.stream()
                 .map(subject -> normalizeSpaces(subject))

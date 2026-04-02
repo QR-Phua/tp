@@ -72,8 +72,16 @@ public class SubjectContainsKeywordsPredicateTest {
 
     @Test
     public void test_subjectDoesNotContainKeywords_returnsFalse() {
+        // [Boundary Testing] Null keywords list
+        SubjectContainsKeywordsPredicate predicate = new SubjectContainsKeywordsPredicate(null);
+        assertFalse(predicate.test(new PersonBuilder().withSubject("Math").build()));
+
         // [Boundary Testing] Zero keywords (empty list)
-        SubjectContainsKeywordsPredicate predicate = new SubjectContainsKeywordsPredicate(Collections.emptyList());
+        predicate = new SubjectContainsKeywordsPredicate(Collections.emptyList());
+        assertFalse(predicate.test(new PersonBuilder().withSubject("Math").build()));
+
+        // [Boundary Testing] Keyword list containing a null keyword
+        predicate = new SubjectContainsKeywordsPredicate(Collections.singletonList(null));
         assertFalse(predicate.test(new PersonBuilder().withSubject("Math").build()));
 
         // [Equivalence Partitioning] Keyword not matching subject prefix or any exact subsequent words
