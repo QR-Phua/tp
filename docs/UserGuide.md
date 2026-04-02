@@ -366,9 +366,9 @@ Search for tutors by keyword, name, subject, or hourly rate — or combine them 
 
 | Mode | Syntax | Returns |
 |------|--------|---------|
-| **General Search** | `find KEYWORD` | All contacts where any field contains `KEYWORD` |
+| **General Search** | `find KEYWORD [MORE_KEYWORDS]` | All contacts where any field has a word starting with any KEYWORD (case-insensitive; space-separate multiple keywords) |
 | **Filtering** | `find [PREFIXES]` | Contacts matching all given prefixes |
-| **General + Filter** | `find KEYWORD [PREFIXES]` | General keyword match, narrowed by prefix conditions |
+| **General + Filter** | `find KEYWORD [MORE_KEYWORDS] [PREFIXES]` | General keyword match (keywords must come before prefixes), narrowed by prefix conditions |
 
 ---
 
@@ -417,7 +417,7 @@ Returns tutors named "Eunwoo…"
 
 ![Result for 'find n/Eunwoo'](images/find_N_Eunwoo.png)
 
-Return tutors named "Dar…" **or** "Vic…" respectively.
+Returns tutors named "Dar…" **or** "Vic…" respectively.
 
 ![Result for 'find n/Dar Vic'](images/find_N_Dar_Vic.png)
 
@@ -437,7 +437,7 @@ Returns tutors teaching Physics above a rate
 
 ![Result for 'find s/Physics r/>40'](images/find_S_phy_R_40.png)
 
-Return tutors teaching History within a rate range
+Returns tutors teaching History within a rate range
 
 ![Result for 'find s/History r/40-80'](images/find_S_hist_R_40_80.png)
 
