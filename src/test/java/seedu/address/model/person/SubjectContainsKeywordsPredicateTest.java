@@ -53,7 +53,7 @@ public class SubjectContainsKeywordsPredicateTest {
         predicate = new SubjectContainsKeywordsPredicate(Collections.singletonList("Math"));
         assertTrue(predicate.test(new PersonBuilder().withSubject("Advanced Math").build()));
 
-        // [Equivalence Partitioning] Multi-word keyword prefix match with spaces
+        // [Equivalence Partitioning] Multi-word keyword exact phrase match with spaces
         predicate = new SubjectContainsKeywordsPredicate(Collections.singletonList("Advanced Math"));
         assertTrue(predicate.test(new PersonBuilder().withSubject("Advanced Math").build()));
 
