@@ -7,13 +7,13 @@ box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
 participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
 participant ":AddCommandParser" as AddCommandParser LOGIC_COLOR
-participant "toAdd:AddCommand" as AddCommand LOGIC_COLOR
+participant "addCommand:AddCommand" as AddCommand LOGIC_COLOR
 participant "r:CommandResult" as CommandResult LOGIC_COLOR
 end box
 
 box Model MODEL_COLOR_T1
 participant "m:Model" as Model MODEL_COLOR
-participant "p:Person" as Person MODEL_COLOR
+participant "person:Person" as Person MODEL_COLOR
 end box
 
 User -> LogicManager : execute("add n/John ...")
@@ -38,13 +38,13 @@ deactivate Person
 create AddCommand
 AddCommandParser -> AddCommand : person
 activate AddCommand
-AddCommand --> AddCommandParser : toAdd
+AddCommand --> AddCommandParser : addCommand
 deactivate AddCommand
 
-AddCommandParser --> AddressBookParser : toAdd
+AddCommandParser --> AddressBookParser : addCommand
 deactivate AddCommandParser
 
-AddressBookParser --> LogicManager : toAdd
+AddressBookParser --> LogicManager : addCommand
 deactivate AddressBookParser
 
 LogicManager -> AddCommand : execute(m)
