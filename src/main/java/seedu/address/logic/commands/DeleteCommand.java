@@ -41,8 +41,12 @@ public class DeleteCommand extends Command {
         }
 
         Person personToDelete = lastShownList.get(targetIndex.getZeroBased());
+
+        List<CommandResult.PersonIndexPair> personsToDisplay =
+                List.of(new CommandResult.PersonIndexPair(personToDelete, 0));
         model.deletePerson(personToDelete);
-        return new CommandResult(String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete)));
+
+        return new CommandResult(MESSAGE_DELETE_PERSON_SUCCESS, personsToDisplay);
     }
 
     @Override

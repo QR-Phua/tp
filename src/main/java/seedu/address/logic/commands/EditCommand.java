@@ -97,7 +97,11 @@ public class EditCommand extends Command {
 
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
+        int displayedIndex = model.getFilteredPersonList().indexOf(editedPerson) + 1;
+        List<CommandResult.PersonIndexPair> personsToDisplay =
+                List.of(new CommandResult.PersonIndexPair(editedPerson, displayedIndex));
+
+        return new CommandResult(MESSAGE_EDIT_PERSON_SUCCESS, personsToDisplay);
     }
 
     /**
