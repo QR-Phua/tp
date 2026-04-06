@@ -277,7 +277,7 @@ This ensures that name conflicts are detected first, followed by contact informa
   - **Alternative 2:** Rates allow decimal values
       - Pros: More flexible and accommodates all possible pricing formats
       - Cons: Adds unnecessary complexity for a feature that is rarely used in practice
-      - 
+    
 #### Class Diagram
 
 The following class diagram shows the key classes involved in enforcing uniqueness constraints,
