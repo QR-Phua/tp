@@ -766,7 +766,7 @@ testers are expected to do more _exploratory_ testing.
     4. Editing a person's rate
         1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
         2. Test case: `edit 1 r/60`<br>
-           Expected: The first tutor's rate is updated to `60`. A success message showing the updated tutor details is displayed.
+           Expected: The first tutor's rate is updated to `60`. 
 
 3. Editing a person with optional fields
     1. Editing a person's address
@@ -836,21 +836,21 @@ testers are expected to do more _exploratory_ testing.
 9. Editing a person without changing any actual value
     1. Prerequisites: List all persons using the `list` command. The first tutor already has the name `Jane Doe`.
     2. Test case: `edit 1 n/Jane Doe`<br>
-       Expected: A success message such as `Tutor updated!` is shown. The tutor profile remains unchanged.
+       Expected: A success message showing the updated tutor details is displayed. The tutor profile remains unchanged.
 
 10. Editing a person's subjects
     1. Editing the subject when the tutor previously has one subject
         1. Prerequisites: List all persons using the `list` command. The first tutor currently has subject `Math`.
         2. Test case: `edit 1 s/Physics`<br>
-           Expected: The first tutor's subject is updated to `Physics`. A success message showing the updated tutor details is displayed.
+           Expected: A success message showing the updated tutor details is displayed. The first tutor's subject is updated to `Physics`. A success message showing the updated tutor details is displayed.
     2. Editing the subject when the tutor previously has multiple subjects
         1. Prerequisites: List all persons using the `list` command. The first tutor currently has subjects `Math` and `English`.
         2. Test case: `edit 1 s/Physics`<br>
-           Expected: The first tutor's subjects are replaced with `Physics`. A success message showing the updated tutor details is displayed.
+           Expected: A success message showing the updated tutor details is displayed. The first tutor's subjects are replaced with `Physics`. A success message showing the updated tutor details is displayed.
     3. Editing a tutor to have multiple subjects in a single subject field
         1. Prerequisites: List all persons using the `list` command. At least one person exists in the list.
         2. Test case: `edit 1 s/Math English Physics`<br>
-           Expected: The first tutor's subject field is updated to `Math English Physics` as a single subject string. In the updated display, the subjects may appear without commas because the input is treated as a single string during editing. Other edit and find behaviour remains functional.
+           Expected: A success message showing the updated tutor details is displayed. The first tutor's subject field is updated to `Math English Physics` as a single subject string. In the updated display, the subjects may appear without commas because the input is treated as a single string during editing. Other edit and find behaviour remains functional.
 
 ### Finding a person
 
