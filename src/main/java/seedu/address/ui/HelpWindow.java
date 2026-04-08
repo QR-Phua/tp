@@ -19,15 +19,15 @@ public class HelpWindow extends UiPart<Stage> {
     public static final String HELP_MESSAGE = "For more detailed instructions, refer to the user guide: "
             + USERGUIDE_URL + "\n\n"
             + "Available Commands:\n"
-            + "• add    : Adds a tutor (e.g. add n/John p/91234567 e/j@o.com s/Math r/50 [a/ADDR] [t/TAG])\n"
-            + "• list   : Shows all tutors\n"
-            + "• find   : Finds tutors by keywords (e.g. find n/John r/50)\n"
-            + "• edit   : Edits an existing tutor (e.g. edit 1 p/98765432)\n"
-            + "• delete : Deletes a tutor (e.g. delete 1)\n"
-            + "• sort   : Sorts tutors by name or rate (e.g. sort rate asc)\n"
-            + "• clear  : Clears all tutors\n"
-            + "• help   : Shows this window\n"
-            + "• exit   : Closes Tuto\n\n"
+            + "• help        : Shows this window\n"
+            + "• clear       : Clears all tutors\n"
+            + "• add         : Adds a tutor (e.g. add n/John p/91234567 e/j@o.com s/Math r/50 [a/ADDR] [t/TAG])\n"
+            + "• list           : Shows all tutors\n"
+            + "• sort        : Sorts tutors by name or rate (e.g. sort rate asc)\n"
+            + "• edit        : Edits an existing tutor (e.g. edit 1 p/98765432)\n"
+            + "• find        : Finds tutors by keywords (e.g. find n/John r/50)\n"
+            + "• delete   : Deletes a tutor (e.g. delete 1)\n"
+            + "• exit         : Closes Tuto\n\n"
             + "Some Important Constraints:\n"
             + "• Names should only contain alphanumeric characters and spaces.\n"
             + "• Phone numbers should only contain numbers, and it should be at least 3 digits long.\n"
@@ -35,7 +35,7 @@ public class HelpWindow extends UiPart<Stage> {
             + "• Addresses can take any values.\n"
             + "• Rates should only contain numbers, and it should not be blank.\n"
             + "• Subjects should only contain alphanumeric characters and spaces, and it should not be blank.\n"
-            + "• Tags names should be alphanumeric.";
+            + "• Tag names should be alphanumeric.";
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
