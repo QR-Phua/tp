@@ -254,7 +254,7 @@ Duplicate checks are performed in the following priority:
 1. Phone number
 2. Email address
 
-This ensures that name conflicts are detected first, followed by contact information conflicts.
+This ensures that phone number conflict is detected first, followed by email address conflict.
 
 #### Design Considerations
 
