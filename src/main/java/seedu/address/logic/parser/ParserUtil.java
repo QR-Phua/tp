@@ -8,6 +8,7 @@ import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
+import seedu.address.logic.Messages;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
@@ -109,7 +110,10 @@ public class ParserUtil {
         requireNonNull(subjects);
         final Set<Subject> subjectSet = new HashSet<>();
         for (String subject : subjects) {
-            subjectSet.add(parseSubject(subject));
+            Subject parsed = parseSubject(subject);
+            if (!subjectSet.add(parsed)) {
+                throw new ParseException(Messages.MESSAGE_DUPLICATE_SUBJECT_VALUES);
+            }
         }
         return subjectSet;
     }
@@ -166,7 +170,10 @@ public class ParserUtil {
         requireNonNull(tags);
         final Set<Tag> tagSet = new HashSet<>();
         for (String tagName : tags) {
-            tagSet.add(parseTag(tagName));
+            Tag parsed = parseTag(tagName);
+            if (!tagSet.add(parsed)) {
+                throw new ParseException(Messages.MESSAGE_DUPLICATE_TAG_VALUES);
+            }
         }
         return tagSet;
     }

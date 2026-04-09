@@ -20,6 +20,10 @@ public class Messages {
     public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d tutors found!";
     public static final String MESSAGE_DUPLICATE_FIELDS =
                 "Multiple values specified for the following single-valued field(s): ";
+    public static final String MESSAGE_DUPLICATE_SUBJECT_VALUES =
+            "Duplicate subject values specified.";
+    public static final String MESSAGE_DUPLICATE_TAG_VALUES =
+            "Duplicate tag values specified.";
 
     /** @see seedu.address.logic.parser.SortCommandParser */
     public static final String MESSAGE_INVALID_SORT_FIELD =
