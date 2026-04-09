@@ -174,23 +174,15 @@ Commands such as `edit` and `delete` use **`INDEX`**: the number shown beside ea
 
 ### Viewing Help : `help`
 
-Opens a link to this User Guide.
+Opens a window with information on the types of command available in Tuto. 
+Some command constraints are also included to help Users know what kind of parameter values are accepted
 
 **Format:** `help`
 
-**Expected output:** A pop-up window appears with a button to copy the online User Guide URL.
+**Expected output:** A pop-up window appears with information on the commands and their associating constraints along 
+with a button to copy the online User Guide URL.
 
 ![Help window](images/helpMessage.png)
-
----
-
-### Clearing all entries: `clear`
-
-Clears all entries from Tuto.
-
-![clear message](images/clearMessage.png)
-
-Format: `clear`
 
 ---
 
@@ -248,66 +240,6 @@ Adds Betsy Crowe as a Biology tutor with an address and two tags.
 ```
 New person added: John Doe; Phone: 98765432; Email: johnd@example.com; Address: ; Subject: Chemistry; Rate: 50; Tags:
 ```
-
----
-
-### Listing All Tutors : `list`
-
-Displays all tutor profiles stored in Tuto.
-
-![list message](images/listMessage.png)
-
-**Format:** `list`
-
-**Expected output:** The Tutor List Panel refreshes to show all contacts. The Top Left Result Display shows the total number of tutors listed.
-
-<box type="tip" seamless>
-
-**Tip:** Use `list` to reset the view after a `find` command has filtered your results.
-
-</box>
-
----
-
-### Sorting the Tutor List : `sort`
-
-Changes the **order** of tutors in the Tutor List Panel. Sorting is by **name** or **hourly rate** only; it does not remove or hide tutors.
-
-**Format:**
-
-```
-sort FIELD ORDER
-```
-
-| Part    | Meaning         | Allowed values                                              |
-| ------- | --------------- | ----------------------------------------------------------- |
-| `FIELD` | What to sort by | `name` or `rate` (case-insensitive)                         |
-| `ORDER` | Sort direction  | `asc` (ascending) or `desc` (descending) (case-insensitive) |
-
-- **Name:** Alphabetical order by full name (case-insensitive).
-- **Rate:** Numeric order by hourly rate. If two tutors have the **same rate**, they are ordered by **name** (ascending) as a tie-break.
-
-**Examples:**
-
-```
-sort name asc
-```
-
-Shows tutors from A → Z by name.
-
-```
-sort rate desc
-```
-
-Shows highest hourly rate first.
-
-**Expected output:** A confirmation message in the Result Display, and the Tutor List Panel updates to the new order. The header above the list also reflects the active sort.
-
-<box type="warning" seamless>
-
-**Indices update after sorting:** Because `edit` and `delete` use the position number in the **current** list, running `sort` changes which tutor is at each index. See [Displayed indices change after `sort` and `delete`](#notes-on-command-format) before your next command.
-
-</box>
 
 ---
 
@@ -370,6 +302,48 @@ Changes the 1st tutor's subject to Physics and rate to $30/hr.
 
 ```
 Edited Person: John Doe; Phone: 91234567; Email: johndoe@example.com; Address: ; Subject: Chemistry; Rate: 50; Tags:
+```
+
+---
+
+
+### Deleting a Tutor : `delete`
+
+Permanently removes a tutor profile from Tuto.
+
+![delete message](images/deleteMessage.png)
+
+Format: `delete INDEX`
+
+- `INDEX` must be a **positive integer** matching a tutor's position in the currently displayed list.
+- After you delete someone, **every tutor below that row moves up** and gets a new index. After a **`sort`**, positions change too. See [Displayed indices change after `sort` and `delete`](#notes-on-command-format).
+
+<box type="warning" seamless>
+
+**Caution:** Deletion is permanent and cannot be undone. Double-check the index before running this command.
+
+</box>
+
+**Examples:**
+
+```
+list
+delete 2
+```
+
+Deletes the 2nd tutor in the full list.
+
+```
+find s/Biology
+delete 1
+```
+
+Deletes the 1st tutor returned in the Biology search results.
+
+**Expected output:**
+
+```
+Deleted Person: Betsy Crowe; Phone: 1234567; Email: betsycrowe@example.com; Address: Newgate Prison; Subject: Biology; Rate: 55; Tags: [experienced][recommended]
 ```
 
 ---
@@ -529,44 +503,73 @@ Only **one** `n/` and one `r/` are allowed per command.
 
 ---
 
-### Deleting a Tutor : `delete`
+### Sorting the Tutor List : `sort`
 
-Permanently removes a tutor profile from Tuto.
+Changes the **order** of tutors in the Tutor List Panel. Sorting is by **name** or **hourly rate** only; it does not remove or hide tutors.
 
-![delete message](images/deleteMessage.png)
+**Format:**
 
-Format: `delete INDEX`
+```
+sort FIELD ORDER
+```
 
-- `INDEX` must be a **positive integer** matching a tutor's position in the currently displayed list.
-- After you delete someone, **every tutor below that row moves up** and gets a new index. After a **`sort`**, positions change too. See [Displayed indices change after `sort` and `delete`](#notes-on-command-format).
+| Part    | Meaning         | Allowed values                                              |
+| ------- | --------------- | ----------------------------------------------------------- |
+| `FIELD` | What to sort by | `name` or `rate` (case-insensitive)                         |
+| `ORDER` | Sort direction  | `asc` (ascending) or `desc` (descending) (case-insensitive) |
 
-<box type="warning" seamless>
-
-**Caution:** Deletion is permanent and cannot be undone. Double-check the index before running this command.
-
-</box>
+- **Name:** Alphabetical order by full name (case-insensitive).
+- **Rate:** Numeric order by hourly rate. If two tutors have the **same rate**, they are ordered by **name** (ascending) as a tie-break.
 
 **Examples:**
 
 ```
-list
-delete 2
+sort name asc
 ```
 
-Deletes the 2nd tutor in the full list.
+Shows tutors from A → Z by name.
 
 ```
-find s/Biology
-delete 1
+sort rate desc
 ```
 
-Deletes the 1st tutor returned in the Biology search results.
+Shows highest hourly rate first.
 
-**Expected output:**
+**Expected output:** A confirmation message in the Result Display, and the Tutor List Panel updates to the new order. The header above the list also reflects the active sort.
 
-```
-Deleted Person: Betsy Crowe; Phone: 1234567; Email: betsycrowe@example.com; Address: Newgate Prison; Subject: Biology; Rate: 55; Tags: [experienced][recommended]
-```
+<box type="warning" seamless>
+
+**Indices update after sorting:** Because `edit` and `delete` use the position number in the **current** list, running `sort` changes which tutor is at each index. See [Displayed indices change after `sort` and `delete`](#notes-on-command-format) before your next command.
+
+</box>
+
+---
+
+### Listing All Tutors : `list`
+
+Displays all tutor profiles stored in Tuto.
+
+![list message](images/listMessage.png)
+
+**Format:** `list`
+
+**Expected output:** The Tutor List Panel refreshes to show all contacts. The Top Left Result Display shows the total number of tutors listed.
+
+<box type="tip" seamless>
+
+**Tip:** Use `list` to reset the view after a `find` command has filtered your results.
+
+</box>
+
+---
+
+### Clearing all entries: `clear`
+
+Clears all entries from Tuto.
+
+![clear message](images/clearMessage.png)
+
+Format: `clear`
 
 ---
 
