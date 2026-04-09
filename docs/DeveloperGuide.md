@@ -9,7 +9,7 @@
 <box type="info" seamless>
 
 **Welcome to the Tuto Developer Guide!**
-This document describes the architecture, software design decisions, and implementation details of Tuto. 
+This document describes the architecture, software design decisions, and implementation details of Tuto.
 It is intended for future developers, maintainers, and anyone interested in understanding the technical inner workings of the application.
 
 </box>
@@ -20,27 +20,57 @@ It is intended for future developers, maintainers, and anyone interested in unde
 ---
 
 ## Table of Contents
-- [Acknowledgements](#acknowledgements)
-- [Setting up, getting started](#setting-up-getting-started)
-- [Design](#design)
-  - [Architecture](#architecture)
-  - [UI component](#ui-component)
-  - [Logic component](#logic-component)
-  - [Model component](#model-component)
-  - [Storage component](#storage-component)
-  - [Common classes](#common-classes)
-- [Implementation](#implementation)
-  - [Adding a Tutor : `add`](#adding-a-tutor-add)
-  - [Uniqueness Constraints](#uniqueness-constraints)
-  - [Finding a Tutor : `find`](#finding-a-tutor-find)
-- [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
-- [Appendix: Requirements](#appendix-requirements)
-  - [Product scope](#product-scope)
-  - [User stories](#user-stories)
-  - [Use cases](#use-cases)
-  - [Non-Functional Requirements](#non-functional-requirements)
-  - [Glossary](#glossary)
-- [Appendix: Instructions for manual testing](#appendix-instructions-for-manual-testing)
+
+- [Tuto Developer Guide](#tuto-developer-guide)
+  - [Table of Contents](#table-of-contents)
+  - [**Acknowledgements**](#acknowledgements)
+  - [**Setting up, getting started**](#setting-up-getting-started)
+  - [**Design**](#design)
+    - [Architecture](#architecture)
+    - [UI component](#ui-component)
+    - [Logic component](#logic-component)
+    - [Model component](#model-component)
+    - [Storage component](#storage-component)
+    - [Common classes](#common-classes)
+  - [**Implementation**](#implementation)
+    - [Adding a Tutor: `add`](#adding-a-tutor-add)
+      - [Alternative flows](#alternative-flows)
+    - [Uniqueness Constraints](#uniqueness-constraints)
+      - [Current Implementation](#current-implementation)
+      - [Design Considerations](#design-considerations)
+      - [Class Diagram](#class-diagram)
+      - [Sequence Diagram](#sequence-diagram)
+    - [Finding a Tutor: `find`](#finding-a-tutor-find)
+      - [Alternative flows](#alternative-flows-1)
+      - [Search Modalities](#search-modalities)
+      - [Design Considerations](#design-considerations-1)
+        - [Aspect: Search Modalities and User Experience](#aspect-search-modalities-and-user-experience)
+        - [Aspect: UI Context and the Query Bar](#aspect-ui-context-and-the-query-bar)
+  - [**Documentation, logging, testing, configuration, dev-ops**](#documentation-logging-testing-configuration-dev-ops)
+  - [**Appendix: Requirements**](#appendix-requirements)
+    - [Product scope](#product-scope)
+    - [User stories](#user-stories)
+    - [Use cases](#use-cases)
+      - [Use Case: U1. View all Tutor Profile](#use-case-u1-view-all-tutor-profile)
+      - [Use Case: U2. View a specific Tutor Profile](#use-case-u2-view-a-specific-tutor-profile)
+      - [Use Case: U3. Delete a Tutor from Tuto](#use-case-u3-delete-a-tutor-from-tuto)
+      - [Use Case: U4. Add a Tutor Profile](#use-case-u4-add-a-tutor-profile)
+      - [Use Case: U5. Search for Tutors by Subject](#use-case-u5-search-for-tutors-by-subject)
+      - [Use Case: U6. Edit a Tutor Profile](#use-case-u6-edit-a-tutor-profile)
+    - [Non-Functional Requirements](#non-functional-requirements)
+    - [Glossary](#glossary)
+  - [**Appendix: Instructions for manual testing**](#appendix-instructions-for-manual-testing)
+    - [Launch and shutdown](#launch-and-shutdown)
+    - [Adding a person](#adding-a-person)
+    - [Deleting a person](#deleting-a-person)
+    - [Finding a person](#finding-a-person)
+      - [Negative Cases \& Error Handling](#negative-cases--error-handling)
+      - [Positive Cases (Universal Search)](#positive-cases-universal-search)
+      - [Complex Cases (Attribute Filtering \& Combinations)](#complex-cases-attribute-filtering--combinations)
+      - [Adversarial \& Edge Cases](#adversarial--edge-cases)
+    - [Sorting the tutor list](#sorting-the-tutor-list)
+      - [Invalid commands and errors](#invalid-commands-and-errors)
+    - [Saving data](#saving-data)
 
 ---
 
@@ -103,14 +133,11 @@ The sections below give more details of each component.
 
 The **API** of this component is specified in [`Ui.java`](https://github.com/AY2526S2-CS2103T-T15-3/tp/blob/master/src/main/java/seedu/address/ui/Ui.java)
 
-
 <puml src="diagrams/UiClassDiagram.puml" alt="Structure of the UI Component"/>
 
 The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-
 The `UI` component uses the JavaFX UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103T-T15-3/tp/blob/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103T-T15-3/tp/blob/master/src/main/resources/view/MainWindow.fxml)
-
 
 The `UI` component,
 
@@ -157,7 +184,6 @@ How the parsing works:
 - When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
 - All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
-
 ### Model component
 
 The **API** of this component is specified in [`Model.java`](https://github.com/AY2526S2-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/model/Model.java)
@@ -203,7 +229,7 @@ This section describes some noteworthy details on how certain features are imple
 
 ### Adding a Tutor: `add`
 
-Adds a new tutor profile to Tuto. 
+Adds a new tutor profile to Tuto.
 The sequence diagram below illustrates the interactions between the Logic and Model components during the execution of the `add` command.
 
 <puml src="diagrams/AddSequenceDiagram.puml" width="550"></puml>
@@ -212,6 +238,7 @@ The `add` command is processed in two main phases: parsing and execution.
 The input string from user is first parsed into an `Person` object, which is then wrapped in an `AddCommand` object and executed to update the `Model` object.
 
 The sequence of interactions is as follows:
+
 1. The user enters the `add` command with the correct arguments, which is received by `LogicManager`.
 2. `LogicManager` calls `AddressBookParser` to parse the input.
 3. `AddressBookParser` identifies the command word and delegates parsing to `AddCommandParser`.
@@ -219,16 +246,16 @@ The sequence of interactions is as follows:
 5. `AddCommandParser` creates an `AddCommand` object containing the `Person`.
 6. The `AddCommand` is returned to `LogicManager`.
 7. `LogicManager` executes the command by calling `AddCommand#execute(Model)`.
-8. `AddCommand` performs validation checks:
-   - checks if the person already exists, 
-   - checks if the same phone and email already exists. 
+8. `AddCommand` performs validation checks if same phone and email already exists.
 9. If all checks pass, the `Person` is added to the `Model`.
 10. A `CommandResult` is created and returned to the user.
 
 #### Alternative flows
+
 - If the input format from user is invalid, a `ParseException` is thrown during parsing and the `command` object is not created.
 - If the person already exists in the address book, a `CommandException` is thrown and the operation is aborted.
 - If the phone or email already exists, a `CommandException` is thrown and the operation is aborted.
+
 ---
 
 ### Uniqueness Constraints
@@ -238,6 +265,7 @@ To ensure data integrity, the application enforces uniqueness constraints across
 #### Current Implementation
 
 The uniqueness of a `Person` is determined by the following fields:
+
 - Phone number
 - Email address
 
@@ -245,12 +273,14 @@ Duplicate checks are performed in `AddCommand` and `EditCommand` before delegati
 If a duplicate is detected, a `CommandException` is thrown immediately with an appropriate error message.
 
 If any of the following conditions are met:
+
 - A person with the same phone number already exists
 - A person with the same email address already exists
 
 The operation is rejected and an appropriate error message is shown to the user.
 
 Duplicate checks are performed in the following priority:
+
 1. Phone number
 2. Email address
 
@@ -270,13 +300,13 @@ This ensures that phone number conflict is detected first, followed by email add
 
 **Aspect: Rates are restricted to whole numbers**
 
-  - **Alternative 1 (current choice):** Rates are restricted to whole numbers
-      - Pros: Reflects common real-world practice, where tutors typically state their hourly rates as whole numbers
-      - Cons: Does not account for edge cases where fractional rates (e.g. $25.50/hour) may be used
+- **Alternative 1 (current choice):** Rates are restricted to whole numbers
+    - Pros: Reflects common real-world practice, where tutors typically state their hourly rates as whole numbers
+    - Cons: Does not account for edge cases where fractional rates (e.g. $25.50/hour) may be used
 
-  - **Alternative 2:** Rates allow decimal values
-      - Pros: More flexible and accommodates all possible pricing formats
-      - Cons: Adds unnecessary complexity for a feature that is rarely used in practice
+- **Alternative 2:** Rates allow decimal values
+    - Pros: More flexible and accommodates all possible pricing formats
+    - Cons: Adds unnecessary complexity for a feature that is rarely used in practice
 
 **Aspect: Address field is optional**
 
@@ -284,10 +314,10 @@ This ensures that phone number conflict is detected first, followed by email add
     - Pros: Accounts for the case where tuition may be done online and hence tutor's address is not needed
     - Cons: User may forget to add address field of tutor in cases where face-to-face tuition is arranged and address is needed to meet the tutor
 
-- **Alternative 2:** Address field is mandatory 
+- **Alternative 2:** Address field is mandatory
     - Pros: Serves as a reminder to user to record address of tutor in cases where face-to-face tuition is arranged
     - Cons: Does not account for the case where tuition may be done online and hence tutor's address is not needed
-    
+
 #### Class Diagram
 
 The following class diagram shows the key classes involved in enforcing uniqueness constraints,
@@ -309,12 +339,13 @@ The following diagram illustrates how duplicate checks are performed during an `
 
 ### Finding a Tutor: `find`
 
-Finds a tutor profile saved in Tuto. The sequence diagrams below illustrate the interactions between the UI, Logic, and Model 
+Finds a tutor profile saved in Tuto. The sequence diagrams below illustrate the interactions between the UI, Logic, and Model
 components during the execution of the `find` command.
 
 The `find` command is processed in two main phases: parsing the query to construct the appropriate predicate, and executing the search to update the `Model` and `UI`.
 
 The sequence of interactions is as follows:
+
 1. The user enters the `find` command with the search keywords, which is received by `LogicManager`.
 2. `LogicManager` calls `AddressBookParser` to parse the input.
 3. `AddressBookParser` identifies the command word and delegates parsing to `FindCommandParser`.
@@ -339,29 +370,32 @@ The diagram below shows the parser classes involved in handling the `find` comma
 <puml src="diagrams/FindParserClassDiagram.puml" width="500"/>
 
 #### Alternative flows
+
 - If the search arguments are empty or invalid, a `ParseException` is thrown during parsing and the `Command` object is not created.
 - If the search yields no matches, `FindCommand` still executes successfully. The displayed list is simply empty, but the query bar in the UI is still appropriately updated to show what keywords were searched.
-
 
 #### Search Modalities
 
 The `find` command supports three modalities of searching, enabling users to find tutor profiles flexibly:
 
 **1. General Search (Universal Search)**
-Users can provide keywords without any prefixes. 
+Users can provide keywords without any prefixes.
+
 - **Example:** `find alice math`
-- **Implementation:** The `FindCommandParser` treats these prefix-less keywords as the preamble. It extracts these keywords and constructs a `UniversalSearchPredicate`. This predicate evaluates if *any* of the tutor's relevant fields (such as name, subject, or tags) match the specified keywords.
+- **Implementation:** The `FindCommandParser` treats these prefix-less keywords as the preamble. It extracts these keywords and constructs a `UniversalSearchPredicate`. This predicate evaluates if **any** of the tutor's relevant fields (such as name, subject, or tags) match the specified keywords.
 
 **2. Attribute Filtering**
-Users can search for specific attributes using prefixes (e.g., `n/`, `s/`, `r/`, `t/`). 
+Users can search for specific attributes using prefixes (e.g., `n/`, `s/`, `r/`, `t/`).
+
 - **Example:** `find n/alice r/10-30`
-- **Implementation:** `FindCommandParser` parses the mapped values for each specified prefix. 
-  - It creates specific predicates for each attribute (e.g., `NameContainsKeywordsPredicate`, `RateRangePredicate`, `SubjectContainsKeywordsPredicate`). 
-  - Multiple occurrences of keywords or prefixes are supported. For names (`n/Alice Peter`), space-separated keywords are evaluated using OR logic (returns profiles matching any of the names). For subjects and tags (e.g., `s/Math s/Physics`), multiple occurrences of the prefix itself are evaluated using AND logic within their respective predicates (returns profiles matching all specified prefixes).
-  - Rate filtering dynamically handles various mathematical boundaries (e.g., exact `r/50`, ranges `r/40-60`, or inequalities `r/<50`).
+- **Implementation:** `FindCommandParser` parses the mapped values for each specified prefix.
+    - It creates specific predicates for each attribute (e.g., `NameContainsKeywordsPredicate`, `RateRangePredicate`, `SubjectContainsKeywordsPredicate`).
+    - Multiple occurrences of keywords or prefixes are supported. For names (`n/Alice Peter`), space-separated keywords are evaluated using OR logic (returns profiles matching any of the names). For subjects and tags (e.g., `s/Math s/Physics`), multiple occurrences of the prefix itself are evaluated using AND logic within their respective predicates (returns profiles matching all specified prefixes).
+    - Rate filtering dynamically handles various mathematical boundaries (e.g., exact `r/50`, ranges `r/40-60`, or inequalities `r/<50`).
 
 **3. General Search + Attribute Filtering**
 Users can combine general search keywords with specific attribute filters to effectively refine their results.
+
 - **Example:** `find alice r/<50`
 - **Implementation:** When `FindCommandParser` detects both a preamble and specific prefixes, it validates that only supported refinement prefixes (`n/`, `s/`, `r/`, `t/`) are used to prevent logical conflicts. It then constructs a **combined predicate** by chaining the `UniversalSearchPredicate` and the attribute-specific predicates together using a logical `AND` (`Predicate.and()`). This ensures the displayed list heavily filters the broad keyword search against the strict attribute constraints.
 
@@ -376,14 +410,17 @@ The design of the `find` command heavily factors in natural human searching patt
 - **Progressive refinement:** The **General Search + Attribute Filtering** modality allows users to cast a wide net initially, completely naturally, and optionally tack on filters to eliminate noise once they see the broad results.
 
 **Alternative 1 (Current choice): Flexible multi-modal search (Universal + Attributes)**
+
 - **Pros:** Scales dynamically with the user's familiarity and immediate needs. It models real-world workflows seamlessly.
 - **Cons / Opportunity costs:** Significantly increases the architectural complexity of the `FindCommandParser`. It introduces edge-case ambiguities where universal keywords logically clash with prefix arguments, requiring us to enforce explicit validation rules (e.g., restricting which abstract prefixes can confidently be used alongside universal search) and write much more comprehensive unit tests for combinations.
 
 **Alternative 2: Strict prefix-only search (Default behavior)**
+
 - **Pros:** Extremely straightforward to implement and parse. It completely eliminates ambiguity in user intent.
 - **Cons:** High friction UX. Users are forced to remember and strictly type specific prefixes (`n/`, `s/`) even for the absolute simplest queries, slowing down natural exploration.
 
 **Alternative 3: Pure universal keyword search**
+
 - **Pros:** Maximum simplicity for both the user interface and the underlying parser.
 - **Cons:** Severely lacks precision. Evaluating mathematical bounds (like finding a tutor whose rate is `<50`) or filtering strictly by a subject is practically impossible to guarantee using flat string-matching.
 
@@ -392,10 +429,12 @@ The design of the `find` command heavily factors in natural human searching patt
 Standard commands return temporary text feedback. However, a `find` command shows a dynamically built list of Tutors, which risks heavily confusing the user if they forget their search modifiers (especially if no matches are found).
 
 **Alternative 1 (Current choice): Dynamic Query Bar Description**
-- **Pros:** Excellent UX. By parsing back the user's query into a human-readable `description` inside the `CommandResult`, the UI permanently displays the active search constraints above the list. It tells the user exactly *why* the list looks the way it does.
+
+- **Pros:** Excellent UX. By parsing back the user's query into a human-readable `description` inside the `CommandResult`, the UI permanently displays the active search constraints above the list. It tells the user exactly _why_ the list looks the way it does.
 - **Cons / Opportunity costs:** Modifies the standard `CommandResult` object to carry an optional `description` string, mildly coupling what is classically a Logic-tier object to the specific layout needs of the UI tier.
 
 **Alternative 2: Standard text feedback only (e.g., "0 persons listed")**
+
 - **Pros:** Keeps `CommandResult` pure and strictly decoupled from UI-specific display needs, reducing data passing.
 - **Cons:** Severe usability flaw. If the user executes a complex filter like `find Math r/<50` and the app just says "0 persons listed" while showing an empty UI, the user immediately loses context of the active constraints governing the screen.
 
@@ -430,7 +469,7 @@ make decisions of a Tutor for their Children.
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
 | Priority | As a ... | I can ...                                                                   | So that ...                                                         |
-|----------|----------|-----------------------------------------------------------------------------|---------------------------------------------------------------------|
+| -------- | -------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | `* * *`  | parent   | add a tutor profile with name, phone, email, subject, rate                  | I can keep track of tutors for my child                             |
 | `* * *`  | parent   | view all tutors profiles in a list                                          | I can have an overview of available tutors for my child             |
 | `* * *`  | parent   | view a tutor's full profile details                                         | I can evaluate if the tutor is suitable for my child                |
@@ -440,7 +479,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *`  | parent   | search tutors by name                                                       | I can quickly locate a specific tutor                               |
 | `* * *`  | parent   | search tutors within a rate range                                           | I can shortlist affordable tutors within my budget                  |
 | `* *`    | parent   | search tutors by multiple attributes (e.g. name, subject, rate)             | I can refine my search results                                      |
-| `* *`    | parent   | search tutors by entering keyword(s)                                        | I can quickly find all tutors that matches my search                | 
+| `* *`    | parent   | search tutors by entering keyword(s)                                        | I can quickly find all tutors that matches my search                |
 | `* *`    | parent   | search tutors by entering keyword(s) and narrow down my search with filters | I can have accurate and relevant search results                     |
 | `* *`    | parent   | tag tutors with labels                                                      | I can categorise or leave a note on tutors for easier management    |
 | `* *`    | parent   | clear all entries                                                           | I can reset the application to an empty state                       |
@@ -642,6 +681,7 @@ Guarantees: If MSS completes until step 4, the Tutor Profile will be updated in 
 - **Subject**: The academic discipline a tutor teaches (e.g., Math, Physics).
 - **Tag**: A customisable label user can put on a tutor profile.
 - **Tutor Profile**: The complete set of data (Name, Phone, Email, etc.) stored for one specific tutor.
+
 ---
 
 ## **Appendix: Instructions for manual testing**
@@ -666,9 +706,8 @@ testers are expected to do more _exploratory_ testing.
     2. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
 
-3. _{ more test cases …​ }_
-
 ### Adding a person
+
 1. Adding a person with all fields given
     1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and/or email address `jane@example.com`
        Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
@@ -728,8 +767,8 @@ testers are expected to do more _exploratory_ testing.
     1. Prerequisites: No person in the list of tutor profiles has the contact number `91234567` and email address `jane@example.com`
        Reason: Tuto prohibits the addition of a person whose contact number and/or email address already exists within the current list of tutor profiles.
     2. Test case: `add n/Jane Smith p/91234567 e/jane@example.com a/Clementi 6th Street s/Mathematics r/s t/friend`<br>
-       Expected: No person is added. An error message indicating that rates can only contain numbers is shown 
-   
+       Expected: No person is added. An error message indicating that rates can only contain numbers is shown
+
 ### Deleting a person
 
 1. Deleting a person while all persons are being shown
@@ -860,172 +899,220 @@ testers are expected to do more _exploratory_ testing.
 #### Negative Cases & Error Handling
 
 1. Finding when the contact list is empty
-   1. Prerequisites: Tuto must have zero Tutor contacts saved. Execute `clear` to remove all existing contacts.
-   2. Test case: `find geography`<br>
-        Expected: A successful search occurs, but with no matches. The text feedback area is hidden. The blue search query bar should show `All fields: "geography"`. Below it, the result display list in the UI shows the placeholder text `No tutors found.`.
-
----
+    1. Prerequisites: Tuto must have zero Tutor contacts saved. Execute `clear` to remove all existing contacts.
+    2. Test case: `find geography`<br>
+       Expected: A successful search occurs, but with no matches. The text feedback area is hidden. The blue search query bar should show `All fields: "geography"`. Below it, the result display list in the UI shows the placeholder text `No tutors found.`.
 
 2. Attempting to restrict universal search with unsupported prefixes (Constraint Error)
-   1. Prerequisites: Tuto is running (contents of the list do not matter).
-   2. Test case: `find John p/91234567`<br>
-        Expected: No search is performed. Instead of the result display list and query bar, the text feedback area is shown displaying an error with a red cross icon indicating that unsupported flags (`p/`) exist when using universal search. The blue search query bar and result list are hidden.
-
----
+    1. Prerequisites: Tuto is running (contents of the list do not matter).
+    2. Test case: `find John p/91234567`<br>
+       Expected: No search is performed. Instead of the result display list and query bar, the text feedback area is shown displaying an error with a red cross icon indicating that unsupported flags (`p/`) exist when using universal search. The blue search query bar and result list are hidden.
 
 3. Executing find without any parameters (Format Error)
-   1. Prerequisites: Tuto is running.
-   2. Test case: `find `<br>
-        Expected: No search is performed. The text feedback area is shown displaying an error about invalid command format. The blue search query bar and result list remain hidden.
-
----
+    1. Prerequisites: Tuto is running.
+    2. Test case: `find `<br>
+       Expected: No search is performed. The text feedback area is shown displaying an error about invalid command format. The blue search query bar and result list remain hidden.
 
 #### Positive Cases (Universal Search)
 
 4. Finding persons using universal search (General keywords)
-   1. Prerequisites: Ensure the contact list has at least these two Tutors with these specific attributes (the rest can be any permitted value):
-      - Name: "John Doe", Subject: "Math", Rate: "50"
-      - Name: "Jane Doe", Subject: "Physics", Rate: "60"
-   2. Test case: `find Doe`<br>
-        Expected: The text feedback area is hidden. The blue search query bar should appear and show `All fields: "Doe"`. Below it, the list is updated to display the full tutor profiles of both 'John Doe' and 'Jane Doe' (and any other tutor profiles that contain the word `Doe`).
-
----
+    1. Prerequisites: Ensure the contact list has at least these two Tutors with these specific attributes (the rest can be any permitted value):
+        - Name: "John Doe", Subject: "Math", Rate: "50"
+        - Name: "Jane Doe", Subject: "Physics", Rate: "60"
+    2. Test case: `find Doe`<br>
+       Expected: The text feedback area is hidden. The blue search query bar should appear and show `All fields: "Doe"`. Below it, the list is updated to display the full tutor profiles of both 'John Doe' and 'Jane Doe' (and any other tutor profiles that contain the word `Doe`).
 
 5. Finding a person using universal search with no matching results
-   1. Prerequisites: Ensure the contact list does not have anyone teaching "Chemistry" or containing the word "Chemistry" in any attribute field.
-   2. Test case: `find Chemistry`<br>
-        Expected: The text feedback area is hidden. The blue search query bar should show `All fields: "Chemistry"`. Below it, the result list shows the placeholder text `No tutors found.`.
-
----
+    1. Prerequisites: Ensure the contact list does not have anyone teaching "Chemistry" or containing the word "Chemistry" in any attribute field.
+    2. Test case: `find Chemistry`<br>
+       Expected: The text feedback area is hidden. The blue search query bar should show `All fields: "Chemistry"`. Below it, the result list shows the placeholder text `No tutors found.`.
 
 #### Complex Cases (Attribute Filtering & Combinations)
 
 6. Finding persons using specific attribute filtering with inequalities
-   1. Prerequisites: Ensure the contact list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
-      - Name: "Alice", Subject: "Physics", Rate: "40"
-      - Name: "Bob", Subject: "Physics", Rate: "70"
-   2. Test case: `find s/Physics r/<50`<br>
-        Expected: The text feedback area is hidden. The blue search query bar should show `Subject: "Physics" • Rate: "<50"`. The result display list should show the tutor profile for "Alice" (and other tutor profiles if condition matches), as Bob is filtered out due to his rate.
-
----
+    1. Prerequisites: Ensure the contact list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
+        - Name: "Alice", Subject: "Physics", Rate: "40"
+        - Name: "Bob", Subject: "Physics", Rate: "70"
+    2. Test case: `find s/Physics r/<50`<br>
+       Expected: The text feedback area is hidden. The blue search query bar should show `Subject: "Physics" • Rate: "<50"`. The result display list should show the tutor profile for "Alice" (and other tutor profiles if condition matches), as Bob is filtered out due to his rate.
 
 7. Finding persons using multiple instances of the same attribute type (AND / OR Logic checks)
-   1. Prerequisites: Ensure the contact list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
-      - Name: "Charlie", Subject: "Math", "Chemistry"
-      - Name: "David", Subject: "Chemistry", "Physics"
-      - Name: "David", Subject: "Math"
-   2. Test case: `find n/Charlie David s/Math s/Chemistry`<br>
-        Expected: The text feedback area is hidden. The blue search query bar should show `Name: "Charlie, David" • Subject: "Math, Chemistry"`. The result list displays only the tutor profile for "Charlie". The name prefix evaluates multiple words via OR logic (allowing either Charlie or David), but the multiple subject prefixes evaluate via AND logic simultaneously (requiring both Math AND Chemistry to be taught by the same tutor to pass).
-
----
+    1. Prerequisites: Ensure the contact list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
+        - Name: "Charlie", Subject: "Math", "Chemistry"
+        - Name: "David", Subject: "Chemistry", "Physics"
+        - Name: "David", Subject: "Math"
+    2. Test case: `find n/Charlie David s/Math s/Chemistry`<br>
+       Expected: The text feedback area is hidden. The blue search query bar should show `Name: "Charlie, David" • Subject: "Math, Chemistry"`. The result list displays only the tutor profile for "Charlie". The name prefix evaluates multiple words via OR logic (allowing either Charlie or David), but the multiple subject prefixes evaluate via AND logic simultaneously (requiring both Math AND Chemistry to be taught by the same tutor to pass).
 
 8. Finding a person combining universal search and specific attribute filtering (AND Logic)
-   1. Prerequisites: Ensure the contact list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
-      - Name: "Eve", Subject: "Math", Rate: "40"
-      - Name: "Eve", Subject: "Physics", Rate: "60"
-   2. Test case: `find Eve r/40-50`<br>
-        Expected: The text feedback area is hidden. The blue search query bar shows `All fields: "Eve" • Rate: "40-50"`. The result list shows only the tutor profile for "Eve" with the 'Math' subject and rate of 40 (and any other matching Tutor profiles), conforming to keywords and the defined rate boundaries successfully.
-
----
+    1. Prerequisites: Ensure the contact list has at least these Tutors with these specific attributes (the rest can be any permitted value subject to uniqueness constraint):
+        - Name: "Eve", Subject: "Math", Rate: "40"
+        - Name: "Eve", Subject: "Physics", Rate: "60"
+    2. Test case: `find Eve r/40-50`<br>
+       Expected: The text feedback area is hidden. The blue search query bar shows `All fields: "Eve" • Rate: "40-50"`. The result list shows only the tutor profile for "Eve" with the 'Math' subject and rate of 40 (and any other matching Tutor profiles), conforming to keywords and the defined rate boundaries successfully.
 
 #### Adversarial & Edge Cases
 
 9. Finding using multiple invalid format prefixes (Duplicate prefix errors)
-   1. Prerequisites: Tuto is running.
-   2. Test case: `find n/Alice n/Bob r/40 r/50`<br>
-        Expected: No search is performed. The text feedback area displays a red cross error indicating that multiple values were specified for single-valued fields (Name and Rate). The blue search query bar and result display list remain hidden.
-
----
+    1. Prerequisites: Tuto is running.
+    2. Test case: `find n/Alice n/Bob r/40 r/50`<br>
+       Expected: No search is performed. The text feedback area displays a red cross error indicating that multiple values were specified for single-valued fields (Name and Rate). The blue search query bar and result display list remain hidden.
 
 10. Finding with trailing/leading whitespaces and empty attribute values
     1. Prerequisites: Tuto is running (contents of the list do not matter).
     2. Test case: `find s/   `<br>
-         Expected: No search is performed. The text feedback area displays an error about invalid subject formatting (Subject cannot be empty). The blue search query bar and result list remain hidden.
+       Expected: No search is performed. The text feedback area displays an error about invalid subject formatting (Subject cannot be empty). The blue search query bar and result list remain hidden.
     3. Test case: `find [any amount of whitespaces given] Alice   `<br>
-         Expected: A successful search occurs. Extraneous surrounding spaces are ignored. The blue search query bar shows `All fields: "Alice"` and standard UI display behavior triggers showing all matching tutor profiles.
+       Expected: A successful search occurs. Extraneous surrounding spaces are ignored. The blue search query bar shows `All fields: "Alice"` and standard UI display behavior triggers showing all matching tutor profiles.
     4. Test case: `find n/ [any amount of whitespaces given] Alice [any amount of whitespaces given] r/ [any amount of whitespaces given] 50   `<br>
-         Expected: A successful search occurs. Arbitrary amounts of spaces between prefixes and values do not affect the parsing. The blue search query bar shows `Name: "Alice" • Rate: "50"`.
-
----
+       Expected: A successful search occurs. Arbitrary amounts of spaces between prefixes and values do not affect the parsing. The blue search query bar shows `Name: "Alice" • Rate: "50"`.
 
 11. Finding with different ordering of parameters
     1. Prerequisites: Ensure the contact list has at least one Tutor with the name "Alice", teaching "Math", with a rate of "50".
     2. Test case: `find r/50 s/Math n/Alice`<br>
-         Expected: A successful search occurs. The ordering of prefixes does not matter. The blue search query bar shows `Name: "Alice" • Subject: "Math" • Rate: "50"`. The result list displays the matching tutor profile.
+       Expected: A successful search occurs. The ordering of prefixes does not matter. The blue search query bar shows `Name: "Alice" • Subject: "Math" • Rate: "50"`. The result list displays the matching tutor profile.
     3. Test case: `find s/Math r/50 n/Alice`<br>
-         Expected: Same as above. The blue search query bar and result list remain consistent regardless of the input order.
-
----
+       Expected: Same as above. The blue search query bar and result list remain consistent regardless of the input order.
 
 12. Stress testing the find logic (extreme number of keywords/prefixes)
     1. Prerequisites: Tuto is running.
     2. Test case: `find ` followed by pasting a very long string of 10,000 alphanumeric characters without spaces.<br>
-         Expected: The system should not crash or freeze. It will search for the exact 10,000-character keyword. The blue search query bar safely displays the truncated string or full string. Results will be shown if any tutor profile contains the search keyword
+       Expected: The system should not crash or freeze. It will search for the exact 10,000-character keyword. The blue search query bar safely displays the truncated string or full string. Results will be shown if any tutor profile contains the search keyword
     3. Test case: `find n/Alice ` repeated 100 times.<br>
-         Expected: No search is performed. The text feedback area displays an error indicating multiple values specified for single-valued fields (Name), preventing resource exhaustion.
-
----
+       Expected: No search is performed. The text feedback area displays an error indicating multiple values specified for single-valued fields (Name), preventing resource exhaustion.
 
 13. Finding with nonsensical rate boundary formatting
     1. Prerequisites: Tuto is running.
     2. Test case: `find r/ABC`<br>
-         Expected: No search is performed. The text feedback area displays an error stating the Rate must be a valid integer. The blue search query bar and result list remain hidden.
+       Expected: No search is performed. The text feedback area displays an error stating the Rate must be a valid integer. The blue search query bar and result list remain hidden.
     3. Test case: `find r/50-40`<br>
-         Expected: No search is performed. The text feedback area displays an error indicating that for a rate range, the lower bound cannot be strictly greater than the upper bound. The blue search query bar and result list remain hidden.
-
----
+       Expected: No search is performed. The text feedback area displays an error indicating that for a rate range, the lower bound cannot be strictly greater than the upper bound. The blue search query bar and result list remain hidden.
 
 14. Rate integer overflow vulnerabilities (Extreme limits)
     1. Prerequisites: Tuto is running.
     2. Test case: `find r/>9999999999999`<br>
-         Expected: The system should not crash from an unhandled `NumberFormatException`. No search is performed. The text feedback area displays a red cross error indicating that the rate provided is invalid (violates valid Java integer limits or rate constraints). The blue search query bar and result list remain hidden.
+       Expected: The system should not crash from an unhandled `NumberFormatException`. No search is performed. The text feedback area displays a red cross error indicating that the rate provided is invalid (violates valid Java integer limits or rate constraints). The blue search query bar and result list remain hidden.
 
----
-
-15. 5Prefix case sensitivity and preamble swallowing (Mistyping prefixes)
+15. Prefix case sensitivity and preamble swallowing (Mistyping prefixes)
     1. Prerequisites: Ensure the contact list has at least one Tutor with the name "Alice".
     2. Test case: `find N/Alice`<br>
-         Expected: The text feedback area is hidden. Because `N/` (capitalized) is not recognized as the official name prefix, the parser safely swallows it as a generic keyword. The blue search query bar shows `All fields: "N/Alice"`. Below it, the result list will show `No tutors found.` (unless a tutor profile literally contains "N/Alice").
-
----
+       Expected: The text feedback area is hidden. Because `N/` (capitalized) is not recognized as the official name prefix, the parser safely swallows it as a generic keyword. The blue search query bar shows `All fields: "N/Alice"`. Below it, the result list will show `No tutors found.` (unless a tutor profile literally contains "N/Alice").
 
 16. Regex and Special Character injection attempts
     1. Prerequisites: Tuto is running.
     2. Test case: `find *[a-z]+* ?.* {}`<br>
-         Expected: The system should not crash due to regex compilation errors or illegal character parsing. The text feedback area is hidden. The blue search query bar safely escapes and displays `All fields: "*[a-z]+* ?.* {}"`. The result list predictably shows `No tutors found.` as it interprets the inputs as exact string literals rather than executable regular expressions.
-
----
+       Expected: The system should not crash due to regex compilation errors or illegal character parsing. The text feedback area is hidden. The blue search query bar safely escapes and displays `All fields: "*[a-z]+* ?.* {}"`. The result list predictably shows `No tutors found.` as it interprets the inputs as exact string literals rather than executable regular expressions.
 
 17. Conflicting valid constraints (Mathematically/Logically impossible sets)
     1. Prerequisites: Ensure the contact list has a tutor profile named "Jane" with a rate of `50` and subject `Math`.
     2. Test case: `find Jane r/<30`<br>
-         Expected: A successful search occurs. The text feedback area is hidden. The blue search query bar shows `All fields: "Jane" • Rate: "<30"`. The result list displays `No tutors found.`. This definitively proves that even if the universal search positively matches the tutor profile "Jane", the restrictive rate filter acts as a pure AND gate to forcefully negate the inclusion, ensuring no false positives slip through.
-
----
+       Expected: A successful search occurs. The text feedback area is hidden. The blue search query bar shows `All fields: "Jane" • Rate: "<30"`. The result list displays `No tutors found.`. This definitively proves that even if the universal search positively matches the tutor profile "Jane", the restrictive rate filter acts as a pure AND gate to forcefully negate the inclusion, ensuring no false positives slip through.
 
 18. Backward slashes and parser confusion techniques
     1. Prerequisites: Tuto is running.
     2. Test case: `find /n Alice /s Math \t friend`<br>
-         Expected: No search is performed. The system strictly expects `n/`, `s/`, etc. as prefixes and subject should only be alphanumeric. Since the slashes are inverted or prefixed, the parser safely swallows it as a generic keyword. The blue search query bar shows `All fields: "/n Alice /s Math \t friend"`. Below it, the result list will show tutor records that contains parts of the search keywords.
-
----
+       Expected: No search is performed. The system strictly expects `n/`, `s/`, etc. as prefixes and subject should only be alphanumeric. Since the slashes are inverted or prefixed, the parser safely swallows it as a generic keyword. The blue search query bar shows `All fields: "/n Alice /s Math \t friend"`. Below it, the result list will show tutor records that contains parts of the search keywords.
 
 19. Empty prefix values injected before valid constraints (Syntax gap traps)
     1. Prerequisites: Tuto is running.
     2. Test case: `find n/ s/Math r/50`<br>
-         Expected: No search is performed. The text feedback area displays a constraint error stating that the Name cannot be empty (or violates validation rules). The parser successfully detects the missing value for `n/` despite `s/` immediately following it. The blue search query bar and result list remain hidden.
-
----
+       Expected: No search is performed. The text feedback area displays a constraint error stating that the Name cannot be empty (or violates validation rules). The parser successfully detects the missing value for `n/` despite `s/` immediately following it. The blue search query bar and result list remain hidden.
 
 20. Rate attribute formatting anomalies (Zero-padding and negatives)
     1. Prerequisites: Ensure the contact list contains a tutor profile with a rate of `0`.
     2. Test case: `find r/00000000`<br>
-         Expected: A successful search occurs. The parser evaluates the heavily padded string as the integer `0`. The blue search query bar shows `Rate: "00000000"` (or mapped equivalent) and lists the matched tutor profiles matching the exact rate of 0.
+       Expected: A successful search occurs. The parser evaluates the heavily padded string as the integer `0`. The blue search query bar shows `Rate: "00000000"` (or mapped equivalent) and lists the matched tutor profiles matching the exact rate of 0.
     3. Test case: `find r/-5` or `find r/--50`<br>
-         Expected: No search is performed. The text feedback area displays a red cross error strongly preventing negative rates or invalid mathematical delimiters.
+       Expected: No search is performed. The text feedback area displays a red cross error strongly preventing negative rates or invalid mathematical delimiters.
+
+### Sorting the tutor list
+
+See also: [Sorting the Tutor List](UserGuide.md#sorting-the-tutor-list-sort) in the User Guide for command format. Sorting only changes the order of the **currently displayed** tutors; it does not add or remove entries. Because `edit` and `delete` use the index shown in the list, running `sort` changes which tutor is at each index.
+
+1. Sorting by name in ascending order
+    1. Prerequisites: Use `list` so all tutors are shown. Ensure there are at least three tutors whose names sort distinctly when compared case-insensitively (e.g. "Amy", "Bob", "Carl").
+    2. Test case: `sort name asc`<br>
+       Expected: The result display shows a success message such as `Sorted tutors by name in ascending order!` The Tutor List Panel lists tutors from A → Z by full name (case-insensitive). The header above the list indicates sorting by name (ascending).
+
+2. Sorting by name in descending order
+    1. Prerequisites: Same as test case 1.
+    2. Test case: `sort name desc`<br>
+       Expected: Success message mentions name and **descending** order. The list shows tutors from Z → A by full name. The list header reflects descending name order.
+
+3. Sorting by rate in ascending order
+    1. Prerequisites: Use `list` so all tutors are shown. Ensure there are at least three tutors with **different** hourly rates.
+    2. Test case: `sort rate asc`<br>
+       Expected: Success message mentions rate and **ascending** order. The list shows lowest rate first, then increasing. The list header reflects sorting by rate (ascending).
+
+4. Sorting by rate in descending order
+    1. Prerequisites: Same as test case 3.
+    2. Test case: `sort rate desc`<br>
+       Expected: Success message mentions rate and **descending** order. The list shows highest rate first. The list header reflects sorting by rate (descending).
+
+5. Tie-break when two tutors share the same rate
+    1. Prerequisites: Use `list`. Ensure two tutors have the **same** rate but **different** names (e.g. rate `50`, names "Zoe" and "Amy"). Optionally add a third tutor with a different rate so ordering is easier to see.
+    2. Test case: `sort rate asc`<br>
+       Expected: Tutors are ordered by rate as usual; for the two with the same rate, the one whose name comes first alphabetically (case-insensitive) appears above the other (e.g. "Amy" before "Zoe").
+
+6. Case-insensitive field and order tokens
+    1. Prerequisites: Use `list` with multiple tutors.
+    2. Test case: `sort NAME ASC` or `sort Rate Desc`<br>
+       Expected: Same behaviour as `sort name asc` or `sort rate desc` respectively (tokens may be typed in any mixture of letter cases).
+
+7. Sorting after a filtered list (`find`)
+    1. Prerequisites: The address book has several tutors; a `find` command matches only **some** of them (e.g. same subject keyword). Run that `find` so the list shows a subset.
+    2. Test case: `sort name asc`<br>
+       Expected: Only the tutors still visible after `find` are reordered; the count of tutors shown stays the same as right before `sort`. The sort applies to the displayed subset, not the full address book.
+
+8. Listing all tutors after sorting (`list` does not clear sort)
+    1. Prerequisites: Run `sort rate desc` while viewing the full list (`list`).
+    2. Test case: `list`<br>
+       Expected: All tutors in the address book are shown again (any previous `find` filter is cleared). The **order** remains by rate descending (or whichever sort was last applied); the list header still describes the active sort. Success message is along the lines of `Listed all tutors!`
+
+#### Invalid commands and errors
+
+9. Empty or wrong number of parameters
+    1. Prerequisites: Tuto is running.
+    2. Test case: `sort`<br>
+       Expected: No change to list order. An error explains invalid command format and shows usage for `sort`.
+    3. Test case: `sort name`<br>
+       Expected: No change to list order. Error message states that sort expects exactly two parameters (field and order), with usage.
+    4. Test case: `sort name asc extra`<br>
+       Expected: Same as the previous (wrong token count).
+
+10. Invalid sort field or order
+    1. Prerequisites: Tuto is running.
+    2. Test case: `sort foo asc`<br>
+       Expected: No change to list order. Error message states that the sort field is invalid and only `name` and `rate` are allowed.
+    3. Test case: `sort name ascending`<br>
+       Expected: No change to list order. Error message states that the sort order is invalid and only `asc` and `desc` are allowed.
 
 ### Saving data
 
-1. Dealing with missing/corrupted data files
-    1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+1. **Missing data file**
+    1. Prerequisites: Tuto is not running.
+    2. Delete `data/addressbook.json`, or move it aside. You may delete the whole `data` directory instead if it only contains that file.
+    3. Relaunch Tuto.
+    4. Expected:
+        - The app starts normally.
+        - The tutor list shows the **built-in sample tutors**, not an empty list.
+        - The in-memory data is that sample set until the next save.
+        - A new `data/addressbook.json` appears after a command that persists data (any normal command that saves).
 
+2. **Corrupted or unreadable data file**
+    1. Prerequisites: Tuto is not running.
+    2. Open `data/addressbook.json` in a text editor. Replace the entire file with invalid JSON (for example a single `{` or arbitrary non-JSON text). Save.
+    3. Relaunch Tuto.
+    4. Expected:
+        - The app starts without crashing.
+        - The tutor list is **empty**; the bad file is not loaded as valid data.
+        - After a successful save, the file on disk is overwritten with valid JSON for the current in-memory book (usually empty until you add tutors).
+
+3. Adverserial case of poisoned JSON file 3. Invalid but well-formed JSON (passes parsing, fails validation/model rules)
+    1. Prerequisites: Tuto is not running.
+    2. Open `data/addressbook.json` in a text editor. Enter valid JSON such as an object with duplicate tutors in the `persons` array (i.e. two identical tutor entries). Save.
+    3. Relaunch Tuto.
+    4. Expected:
+        - The app starts without crashing.
+        - The tutor list is **empty** (no tutors are shown), as the file violates model rules.
+        - After a successful save, the file on disk is overwritten with valid JSON for the current in-memory book (usually empty until you add tutors).
