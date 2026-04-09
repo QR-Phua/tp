@@ -233,7 +233,7 @@ The sequence of interactions is as follows:
 
 ### Uniqueness Constraints
 
-To ensure data integrity, the application enforces uniqueness constraints on each `Person`.
+To ensure data integrity, the application enforces uniqueness constraints across tutor profiles.
 
 #### Current Implementation
 
@@ -301,7 +301,7 @@ and how they interact structurally.
 
 #### Sequence Diagram
 
-The following diagram illustrates how duplicate checks are performed during an `add` or `edit` operation:
+The following diagram illustrates how duplicate checks are performed during an `add` operation:
 
 <puml src="diagrams/UniquenessConstraintSequence.puml" />
 
