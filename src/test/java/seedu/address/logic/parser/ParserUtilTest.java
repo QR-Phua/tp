@@ -13,11 +13,13 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.Messages;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Subject;
 import seedu.address.model.tag.Tag;
 
 public class ParserUtilTest {
@@ -186,5 +188,24 @@ public class ParserUtilTest {
         Set<Tag> expectedTagSet = new HashSet<Tag>(Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
 
         assertEquals(expectedTagSet, actualTagSet);
+    }
+
+    @Test
+    public void parseTags_duplicateValues_throwsParseException() {
+        assertThrows(ParseException.class, Messages.MESSAGE_DUPLICATE_TAG_VALUES, ()
+                -> ParserUtil.parseTags(Arrays.asList(VALID_TAG_1, VALID_TAG_1)));
+    }
+
+    @Test
+    public void parseSubjects_duplicateValues_throwsParseException() {
+        assertThrows(ParseException.class, Messages.MESSAGE_DUPLICATE_SUBJECT_VALUES, ()
+                -> ParserUtil.parseSubjects(Arrays.asList("Math", "Math")));
+    }
+
+    @Test
+    public void parseSubjects_collectionWithValidSubjects_returnsSubjectSet() throws Exception {
+        Set<Subject> actual = ParserUtil.parseSubjects(Arrays.asList("Math", "Physics"));
+        Set<Subject> expected = new HashSet<>(Arrays.asList(new Subject("Math"), new Subject("Physics")));
+        assertEquals(expected, actual);
     }
 }

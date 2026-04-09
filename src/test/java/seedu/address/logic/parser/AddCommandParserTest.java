@@ -107,6 +107,18 @@ public class AddCommandParserTest {
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_NAME, PREFIX_ADDRESS, PREFIX_EMAIL, PREFIX_PHONE,
                         PREFIX_RATE));
 
+        // duplicate subject values (same subject twice)
+        assertParseFailure(parser,
+                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB + SUBJECT_DESC_BOB + SUBJECT_DESC_BOB
+                        + RATE_DESC_BOB + TAG_DESC_FRIEND,
+                Messages.MESSAGE_DUPLICATE_SUBJECT_VALUES);
+
+        // duplicate tag values (same tag twice)
+        assertParseFailure(parser,
+                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB + SUBJECT_DESC_BOB + RATE_DESC_BOB
+                        + TAG_DESC_FRIEND + TAG_DESC_FRIEND,
+                Messages.MESSAGE_DUPLICATE_TAG_VALUES);
+
         // invalid value followed by valid value
 
         // invalid name
