@@ -22,56 +22,55 @@ It is intended for future developers, maintainers, and anyone interested in unde
 ## Table of Contents
 
 - [Tuto Developer Guide](#tuto-developer-guide)
-    - [Table of Contents](#table-of-contents)
-    - [**Acknowledgements**](#acknowledgements)
-    - [**Setting up, getting started**](#setting-up-getting-started)
-    - [**Design**](#design)
-        - [Architecture](#architecture)
-        - [UI component](#ui-component)
-        - [Logic component](#logic-component)
-        - [Model component](#model-component)
-        - [Storage component](#storage-component)
-        - [Common classes](#common-classes)
-    - [**Implementation**](#implementation)
-        - [Adding a Tutor: `add`](#adding-a-tutor-add)
-            - [Alternative flows](#alternative-flows)
-        - [Uniqueness Constraints](#uniqueness-constraints)
-            - [Current Implementation](#current-implementation)
-            - [Design Considerations](#design-considerations)
-            - [Class Diagram](#class-diagram)
-            - [Sequence Diagram](#sequence-diagram)
-        - [Finding a Tutor: `find`](#finding-a-tutor-find)
-            - [Alternative flows](#alternative-flows-1)
-            - [Search Modalities](#search-modalities)
-            - [Design Considerations](#design-considerations-1)
-                - [Aspect: Search Modalities and User Experience](#aspect-search-modalities-and-user-experience)
-                - [Aspect: UI Context and the Query Bar](#aspect-ui-context-and-the-query-bar)
-    - [**Documentation, logging, testing, configuration, dev-ops**](#documentation-logging-testing-configuration-dev-ops)
-    - [**Appendix: Requirements**](#appendix-requirements)
-        - [Product scope](#product-scope)
-        - [User stories](#user-stories)
-        - [Use cases](#use-cases)
-            - [Use Case: U1. View all Tutor Profile](#use-case-u1-view-all-tutor-profile)
-            - [Use Case: U2. View a specific Tutor Profile](#use-case-u2-view-a-specific-tutor-profile)
-            - [Use Case: U3. Delete a Tutor from Tuto](#use-case-u3-delete-a-tutor-from-tuto)
-            - [Use Case: U4. Add a Tutor Profile](#use-case-u4-add-a-tutor-profile)
-            - [Use Case: U5. Search for Tutors by Subject](#use-case-u5-search-for-tutors-by-subject)
-            - [Use Case: U6. Edit a Tutor Profile](#use-case-u6-edit-a-tutor-profile)
-        - [Non-Functional Requirements](#non-functional-requirements)
-        - [Glossary](#glossary)
-    - [**Appendix: Instructions for manual testing**](#appendix-instructions-for-manual-testing)
-        - [Launch and shutdown](#launch-and-shutdown)
-        - [Adding a person](#adding-a-person)
-        - [Deleting a person](#deleting-a-person)
-        - [Editing a person](#editing-a-person)
-        - [Finding a person](#finding-a-person)
-            - [Negative Cases \& Error Handling](#negative-cases--error-handling)
-            - [Positive Cases (Universal Search)](#positive-cases-universal-search)
-            - [Complex Cases (Attribute Filtering \& Combinations)](#complex-cases-attribute-filtering--combinations)
-            - [Adversarial \& Edge Cases](#adversarial--edge-cases)
-        - [Sorting the tutor list](#sorting-the-tutor-list)
-            - [Invalid commands and errors](#invalid-commands-and-errors)
-        - [Saving data](#saving-data)
+  - [Table of Contents](#table-of-contents)
+  - [**Acknowledgements**](#acknowledgements)
+  - [**Setting up, getting started**](#setting-up-getting-started)
+  - [**Design**](#design)
+    - [Architecture](#architecture)
+    - [UI component](#ui-component)
+    - [Logic component](#logic-component)
+    - [Model component](#model-component)
+    - [Storage component](#storage-component)
+    - [Common classes](#common-classes)
+  - [**Implementation**](#implementation)
+    - [Adding a Tutor: `add`](#adding-a-tutor-add)
+      - [Alternative flows](#alternative-flows)
+    - [Uniqueness Constraints](#uniqueness-constraints)
+      - [Current Implementation](#current-implementation)
+      - [Design Considerations](#design-considerations)
+      - [Class Diagram](#class-diagram)
+      - [Sequence Diagram](#sequence-diagram)
+    - [Finding a Tutor: `find`](#finding-a-tutor-find)
+      - [Alternative flows](#alternative-flows-1)
+      - [Search Modalities](#search-modalities)
+      - [Design Considerations](#design-considerations-1)
+        - [Aspect: Search Modalities and User Experience](#aspect-search-modalities-and-user-experience)
+        - [Aspect: UI Context and the Query Bar](#aspect-ui-context-and-the-query-bar)
+  - [**Documentation, logging, testing, configuration, dev-ops**](#documentation-logging-testing-configuration-dev-ops)
+  - [**Appendix: Requirements**](#appendix-requirements)
+    - [Product scope](#product-scope)
+    - [User stories](#user-stories)
+    - [Use cases](#use-cases)
+      - [Use Case: U1. View all Tutor Profile](#use-case-u1-view-all-tutor-profile)
+      - [Use Case: U2. Delete a Tutor from Tuto](#use-case-u2-delete-a-tutor-from-tuto)
+      - [Use Case: U3. Add a Tutor Profile](#use-case-u3-add-a-tutor-profile)
+      - [Use Case: U4. Search for Tutors by Subject](#use-case-u4-search-for-tutors-by-subject)
+      - [Use Case: U5. Edit a Tutor Profile](#use-case-u5-edit-a-tutor-profile)
+    - [Non-Functional Requirements](#non-functional-requirements)
+    - [Glossary](#glossary)
+  - [**Appendix: Instructions for manual testing**](#appendix-instructions-for-manual-testing)
+    - [Launch and shutdown](#launch-and-shutdown)
+    - [Adding a person](#adding-a-person)
+    - [Deleting a person](#deleting-a-person)
+    - [Editing a person](#editing-a-person)
+    - [Finding a person](#finding-a-person)
+      - [Negative Cases \& Error Handling](#negative-cases--error-handling)
+      - [Positive Cases (Universal Search)](#positive-cases-universal-search)
+      - [Complex Cases (Attribute Filtering \& Combinations)](#complex-cases-attribute-filtering--combinations)
+      - [Adversarial \& Edge Cases](#adversarial--edge-cases)
+    - [Sorting the tutor list](#sorting-the-tutor-list)
+      - [Invalid commands and errors](#invalid-commands-and-errors)
+    - [Saving data](#saving-data)
 
 ---
 
@@ -512,30 +511,7 @@ Preconditions: `Tuto` is running
 
         Use case ends.
 
-#### Use Case: U2. View a specific Tutor Profile
-
-Preconditions: `Tuto` is running
-
-**MSS:**
-
-1. `Parent` requests to list all Tutor Profile (U1)
-2. `Parent` enters the command specifying the Index
-3. `Tuto` displays the tutor's full profile
-   Use Case ends
-
-**Extensions**
-
-- 2a. The provided index is invalid
-    - 2a1. `Tuto` shows an error message
-
-        Use case ends
-
-- 2b. The command format is invalid
-    - 2b1. `Tuto` shows an error message.
-
-        Use case ends
-
-#### Use Case: U3. Delete a Tutor from Tuto
+#### Use Case: U2. Delete a Tutor from Tuto
 
 Preconditions: `Tuto` is running and `Tuto` contains at least one Tutor Profile
 
@@ -561,7 +537,7 @@ Guarantees: The Tutor Profile is removed from storage upon successful completion
 
         Use case ends
 
-#### Use Case: U4. Add a Tutor Profile
+#### Use Case: U3. Add a Tutor Profile
 
 Preconditions: `Tuto` is running
 
@@ -592,7 +568,7 @@ Guarantees: If MSS completes until step 3, Tutor Profile will be added to Tutoâ€
 
         Use case ends
 
-#### Use Case: U5. Search for Tutors by Subject
+#### Use Case: U4. Search for Tutors by Subject
 
 Preconditions: `Tuto` is running
 
@@ -617,7 +593,7 @@ Guarantees: If MSS completes until step 3, `Tuto` displays all tutors in the con
 
         Use case ends
 
-#### Use Case: U6. Edit a Tutor Profile
+#### Use Case: U5. Edit a Tutor Profile
 
 Preconditions: `Tuto` is running and `Tuto` contains at least one Tutor Profile
 
