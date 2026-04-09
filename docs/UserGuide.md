@@ -174,13 +174,11 @@ Commands such as `edit` and `delete` use **`INDEX`**: the number shown beside ea
 
 ### Viewing Help : `help`
 
-Opens a window with information on the types of command available in Tuto. 
-Some command constraints are also included to help Users know what kind of parameter values are accepted
+Displays a summary of available commands and their accepted parameter values.
 
 **Format:** `help`
 
-**Expected output:** A pop-up window appears with information on the commands and their associating constraints along 
-with a button to copy the online User Guide URL.
+**Expected output:** A help window opens containing command syntax, constraints, and a link to the User Guide. The result display shows `✨  Opened help window.`
 
 ![Help window](images/helpMessage.png)
 
@@ -547,17 +545,17 @@ Shows highest hourly rate first.
 
 ### Listing All Tutors : `list`
 
-Displays all tutor profiles stored in Tuto.
+Displays all tutor profiles stored in Tuto. The GUI features a left panel that displays the full contact list at all times, so this command is predominantly used in the CLI or to quickly clear search filters in the main view.
 
 ![list message](images/listMessage.png)
 
 **Format:** `list`
 
-**Expected output:** The Tutor List Panel refreshes to show all contacts. The Top Left Result Display shows the total number of tutors listed.
+**Expected output:** The central panel automatically updates to show all stored tutors, and the result display shows `✨  Listed all tutors!`.
 
 <box type="tip" seamless>
 
-**Tip:** Use `list` to reset the view after a `find` command has filtered your results.
+**Tip:** Run this command to reset the view after a `find` command in CLI.
 
 </box>
 
@@ -638,13 +636,13 @@ A: The Help Window may be minimised. Check your taskbar and restore it manually.
 ## Command Summary
 
 | Action     | Format                                                                                                | Example                                                                                                           |
-| ---------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+|------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
 | **Help**   | `help`                                                                                                | `help`                                                                                                            |
 | **Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL s/SUBJECT1 s/SUBJECT2 ... s/SUBJECTn r/RATE [a/ADDRESS] [t/TAG]…​` | `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 s/Biology r/45 t/friend t/colleague` |
-| **List**   | `list`                                                                                                | `list`                                                                                                            |
-| **Sort**   | `sort FIELD ORDER`                                                                                    | `sort name asc`, `sort rate desc`                                                                                 |
 | **Edit**   | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [s/SUBJECT] [r/RATE] [t/TAG]…`                   | `edit 2 n/James Lee e/james@example.com`                                                                          |
-| **Find**   | `find KEYWORD` \| `find [PREFIXES]` \| `find KEYWORD [PREFIXES]`                                      | `find geography`, `find s/Biology r/45`, `find korean r/>50`                                                      |
 | **Delete** | `delete INDEX`                                                                                        | `delete 3`                                                                                                        |
+| **Find**   | `find KEYWORD` \| `find [PREFIXES]` \| `find KEYWORD [PREFIXES]`                                      | `find geography`, `find s/Biology r/45`, `find korean r/>50`                                                      |
+| **Sort**   | `sort FIELD ORDER`                                                                                    | `sort name asc`, `sort rate desc`                                                                                 |
+| **List**   | `list`                                                                                                | `list`                                                                                                            |
 | **Clear**  | `clear`                                                                                               | `clear`                                                                                                           |
 | **Exit**   | `exit`                                                                                                | `exit`                                                                                                            |
