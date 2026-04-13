@@ -220,15 +220,15 @@ Adds a new Tutor Profile to Tuto.
 
 #### Parameters
 
-| Prefix | Field             | Required | Accepted values                                                                                        |
-| ------ | ----------------- | -------- |--------------------------------------------------------------------------------------------------------|
-| `n/`   | Name              | Yes      | Alphanumeric text + spaces allowed only, no special characters are allowed                             |
-| `p/`   | Phone number      | Yes      | 8 digits for Singapore number, 10 digits excluding '+' for international number                        |
-| `e/`   | Email             | Yes      | Valid email format (e.g. `user@example.com`)                                                           |
-| `s/`   | Subject           | Yes      | Alphanumeric text + spaces (e.g. `Advanced Mathematics`, `Biology`)                                    |
-| `r/`   | Hourly rate (SGD) | Yes      | 0 or any positive integer                                                                              |
-| `a/`   | Address           | No       | Any text (must not contain valid prefixes such as s/, as these will be interpreted as separate fields) |
-| `t/`   | Tag               | No       | Alphanumeric text, no spaces                                                                           |
+| Prefix | Field             | Required | Accepted values                                                                                                                                                                                                                                                                  |
+| ------ | ----------------- | -------- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `n/`   | Name              | Yes      | Alphanumeric text + spaces allowed only, no special characters are allowed                                                                                                                                                                                                       |
+| `p/`   | Phone number      | Yes      | 8 digits for Singapore number, 10 digits excluding '+' for international number                                                                                                                                                                                                  |
+| `e/`   | Email             | Yes      | Valid email format (e.g. `user@example.com`) The local-part must start and end with an alphanumeric character, and the domain must contain period-separated labels ending in a label of at least 2 characters. Consecutive special characters (e.g. `..`, `--`) are not allowed. |
+| `s/`   | Subject           | Yes      | Alphanumeric text + spaces (e.g. `Advanced Mathematics`, `Biology`)                                                                                                                                                                                                              |
+| `r/`   | Hourly rate (SGD) | Yes      | 0 or any positive integer                                                                                                                                                                                                                                                        |
+| `a/`   | Address           | No       | Any text (must not contain valid prefixes such as s/, as these will be interpreted as separate fields)                                                                                                                                                                           |
+| `t/`   | Tag               | No       | Alphanumeric text, no spaces                                                                                                                                                                                                                                                     |
 
 <box type="tip" seamless>
 
