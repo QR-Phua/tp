@@ -456,6 +456,24 @@ Search for tutors by keyword, name, subject, or hourly rate — or combine them 
 
 </box>
 
+<box type="info" seamless>
+
+**Note on unrecognised or incorrectly formatted prefixes:**
+
+For the `find` command, Tuto only recognises the exact lowercase prefixes: `n/`, `s/`, `r/`, and `t/`. 
+
+**Uppercase prefixes (e.g., `N/`, `S/`) or unsupported prefixes (e.g., `p/`, `x/`) are NOT supported.**
+
+If you type an unsupported or uppercase prefix, Tuto will **not** show an error. Instead, it treats the entire chunk as a general keyword to search for across all fields. 
+
+For example:
+- `find N/Alice` will search for the literal exact text `"N/Alice"` across all fields instead of filtering by name.
+- `find p/91234567 n/Alex` will treat `p/91234567` as a keyword to search for, and only use `n/Alex` to filter by name.
+
+If your search is returning confusing or empty results, double-check your prefixes to make sure they are exactly as listed!
+
+</box>
+
 ---
 
 #### Search Modes
@@ -601,29 +619,17 @@ Only **one** `n/` and one `r/` are allowed per command.
 
 ![Invalid Command](images/find_generic_error.png)
 
-<box type="info" seamless>
-
-**Note on unrecognised or incorrectly formatted prefixes:**
-
-For the `find` command, Tuto only recognises the exact lowercase prefixes: `n/`, `s/`, `r/`, and `t/`. 
-
-**Uppercase prefixes (e.g., `N/`, `S/`) or unsupported prefixes (e.g., `p/`, `x/`) are NOT supported.**
-
-If you type an unsupported or uppercase prefix, Tuto will **not** show an error. Instead, it treats the entire chunk as a general keyword to search for across all fields. 
-
-For example:
-- `find N/Alice` will search for the literal exact text `"N/Alice"` across all fields instead of filtering by name.
-- `find p/91234567 n/Alex` will treat `p/91234567` as a keyword to search for, and only use `n/Alex` to filter by name.
-
-If your search is returning confusing or empty results, double-check your prefixes to make sure they are exactly as listed!
-
-</box>
-
 ---
 
 ### Sorting the Tutor List : `sort`
 
 Changes the **order** of tutors in the Tutor List Panel. Sorting is by **name** or **hourly rate** only; it does not remove or hide tutors.
+
+<box type="info" seamless>
+
+**Note:** Sorting is **temporary**! When you close and reopen Tuto, the list will always reset to its default original order (the exact order in which you added the tutors).
+
+</box>
 
 ![Sort command hero image](images/sort_hero.png)
 
