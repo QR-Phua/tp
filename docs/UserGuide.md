@@ -428,6 +428,19 @@ Search for tutors by keyword, name, subject, or hourly rate — or combine them 
 
 </box>
 
+<box type="info" seamless>
+
+**Note on words after prefixes:**
+Words that appear after a prefix are treated as part of that prefix value until another recognised prefix appears.
+
+For example:
+- `find n/Alex Tan` treats `Alex Tan` as the value of `n/`
+- `find r/25 Alex` treats `25 Alex` as the value of `r/`, which may result in an invalid rate format error
+
+If you want to combine general keywords with prefixes, place the general keywords before any prefixes.
+
+</box>
+
 ---
 
 #### Search Modes
