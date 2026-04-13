@@ -30,7 +30,6 @@ import seedu.address.model.person.UniversalSearchPredicate;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.TagContainsKeywordsPredicate;
 
-
 /**
  * Parses input arguments and creates a new FindCommand object.
  */
@@ -131,7 +130,8 @@ public class FindCommandParser implements Parser<FindCommand> {
         if (argMultimap.getValue(PREFIX_RATE).isPresent()) {
             String rateValue = argMultimap.getValue(PREFIX_RATE).get().trim();
             if (rateValue.matches("[<>]\\d.*")) {
-                rateValue = rateValue.charAt(0) + new BigDecimal(rateValue.substring(1)).stripTrailingZeros().toPlainString();
+                rateValue = rateValue.charAt(0)
+                        + new BigDecimal(rateValue.substring(1)).stripTrailingZeros().toPlainString();
             } else if (rateValue.matches("\\d+(\\.\\d+)?")) {
                 rateValue = new BigDecimal(rateValue).stripTrailingZeros().toPlainString();
             }
@@ -319,6 +319,9 @@ public class FindCommandParser implements Parser<FindCommand> {
         // Case 1: Less-than search, e.g. r/<10
         if (rateArgs.startsWith("<")) {
             String num = rateArgs.substring(1).trim();
+            if (num.matches("-\\d+(\\.\\d+)?")) {
+                throw new ParseException(Rate.MESSAGE_NEGATIVE_RATE_NOT_ALLOWED);
+            }
             BigDecimal bound = parseRateDecimalBound(num);
             if (bound.signum() == 0) {
                 throw new ParseException(Rate.MESSAGE_NEGATIVE_RATE_NOT_ALLOWED);
@@ -329,10 +332,10 @@ public class FindCommandParser implements Parser<FindCommand> {
         // Case 2: Greater-than search, e.g. r/>10
         if (rateArgs.startsWith(">")) {
             String num = rateArgs.substring(1).trim();
-            if (num.matches("-\\d+(\\.\\d+)?")) {
-                throw new ParseException(Rate.MESSAGE_NEGATIVE_RATE_NOT_ALLOWED);
+            if (!num.matches("-?\\d+(\\.\\d+)?")) {
+                throw new ParseException(Rate.MESSAGE_INVALID_RATE_FIND_FORMAT);
             }
-            return new RateGreaterThanPredicate(parseRateDecimalBound(num));
+            return new RateGreaterThanPredicate(new BigDecimal(num));
         }
 
         // Case 3: Rate range search, e.g. r/10-20

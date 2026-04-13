@@ -31,7 +31,7 @@ public class Rate {
                     + "e.g. r/10-20.";
 
     public static final String MESSAGE_NEGATIVE_RATE_NOT_ALLOWED =
-            "Rate cannot be negative. Please enter a non-negative value.";
+            "Rate cannot be negative.";
 
     /*
      * The first character of the address must not be a whitespace,
