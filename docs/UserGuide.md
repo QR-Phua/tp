@@ -38,22 +38,22 @@ This guide is written for parents who are comfortable using a keyboard and want 
       - [Constraints](#constraints)
       - [Examples](#examples)
     - [Editing a Tutor Profile : `edit`](#editing-a-tutor-profile-edit)
-      - [Parameters](#parameters-1)
-      - [Constraints](#constraints-1)
-      - [Examples](#examples-1)
+      - [Parameters](#parameters-2)
+      - [Constraints](#constraints-2)
+      - [Examples](#examples-2)
       - [Invalid Usage](#invalid-usage)
     - [Deleting a Tutor : `delete`](#deleting-a-tutor-delete)
-      - [Parameters](#parameters-2)
-      - [Examples](#examples-2)
+      - [Parameters](#parameters-3)
+      - [Examples](#examples-3)
     - [Finding Tutors : `find`](#finding-tutors-find)
       - [Prefixes](#prefixes)
       - [Search Modes](#search-modes)
       - [How Matching Works](#how-matching-works)
-      - [Examples](#examples-3)
+      - [Examples](#examples-4)
       - [Invalid Usage](#invalid-usage-1)
     - [Sorting the Tutor List : `sort`](#sorting-the-tutor-list-sort)
-      - [Parameters](#parameters-3)
-      - [Examples](#examples-4)
+      - [Parameters](#parameters-4)
+      - [Examples](#examples-5)
       - [Invalid Usage](#invalid-usage-2)
     - [Listing All Tutors : `list`](#listing-all-tutors-list)
     - [Clearing All Entries : `clear`](#clearing-all-entries-clear)
@@ -179,14 +179,23 @@ The following conventions apply to all commands in this guide:
 
 ### Understanding List Indices
 
-Commands such as `edit` and `delete` use **`INDEX`**: the number shown beside each tutor in the **Tutor List Panel** for the **current** list order.
+Commands such as `edit` and `delete` use **`INDEX`**: the number shown directly next to the name of the tutor contact in the **Tutor List Panel**.
+
+<box type="info" seamless>
+
+**Indices refer to the overall Global List**
+The index is the tutor's current position in your **full list of all saved tutors**.
+When you search for a tutor (e.g., using `find`), the index numbers **do not restart from 1**. Instead, Tuto just hides the tutors that don't match, so the remaining tutors keep their numbers from the full list (for example, your search results might show tutors numbered 4, 9, and 12). The index shown during a search and the index shown on the full list are exactly the same.
+
+</box>
 
 <box type="warning" seamless>
 
-**Displayed indices change after `sort` and `delete`**
+**Displayed indices change after `sort` and `delete`, and may differ during `find`**
 
-- After a **`sort`** command, tutors are reordered, so the same person may appear at a **different** index than before.
+- After a **`sort`** command, tutors are reordered in the global list, so the same person may appear at a **different** index than before.
 - After a **`delete`** command, the list becomes shorter and tutors below the removed row **shift up**, so their indices are **renumbered** (what was “tutor 5” may become “tutor 4”).
+- During a **`find`** command, never assume the first result is index 1. Always use the exact index displayed directly next to the name of the tutor contact in the current search results.
 
 **Always search with Find or look at the Tutor List Panel again** before typing the next `edit` or `delete` command. Do not assume indices from an earlier step are still correct.
 
@@ -299,7 +308,7 @@ Updates one or more fields of an existing Tutor Profile.
 
 #### Parameters
 
-- `INDEX` refers to the number shown next to the tutor in the current list. It must be a **positive integer** (1, 2, 3 …).
+- `INDEX` refers to the number shown directly next to the name of the tutor contact in the current list. It must be a **positive integer** (1, 2, 3 …).
 - **Accepted Prefixes:** Accepts the same prefixes (`n/`, `p/`, `e/`, `s/`, `r/`, `a/`, `t/`) as the `add` command.
 - After a **`sort`** or **`delete`**, indices may no longer match what you saw earlier — see [Understanding List Indices](#understanding-list-indices).
 - At least one field must be provided.
@@ -383,7 +392,7 @@ Permanently removes a Tutor Profile from Tuto.
 
 #### Parameters
 
-- `INDEX` must be a **positive integer** matching a tutor's position in the currently displayed list.
+- `INDEX` must be a **positive integer** indicating the number shown directly next to the name of the tutor contact in the currently displayed list.
 - After you delete someone, **every tutor below that row moves up** and gets a new index. After a **`sort`**, positions change too. See [Understanding List Indices](#understanding-list-indices).
 
 <box type="warning" seamless>
@@ -404,14 +413,19 @@ delete 2
 
 Deletes the Tutor profile with index 2.
 
-**Deleting from search results**
+**Deleting after searching**
 
 ```
 find s/Biology
-delete 1
+delete [any index that appears]
 ```
 
-Deletes the Tutor Profile with index 1
+Deletes the Tutor Profile matching the specified index.
+
+<box type="warning" seamless>
+
+**Verify the index:** Do not assume the first matching tutor in your search results is at index 1. Because Tuto uses **global list indexing**, search results maintain their original list numbers (for example, the first result might actually be index 5). Be sure to look at the exact index number returned directly next to the name of the tutor contact in the search results, and use that specific index in your `delete` command.
+</box>
 
 **Expected output:**
 
