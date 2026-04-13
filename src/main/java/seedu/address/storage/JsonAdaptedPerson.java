@@ -125,6 +125,10 @@ class JsonAdaptedPerson {
             modelSubjects.add(subject.toModelType());
         }
 
+        if (modelSubjects.isEmpty()) {
+            throw new IllegalValueException("Person must have at least one subject.");
+        }
+
         if (rate == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Rate.class.getSimpleName()));
         }
