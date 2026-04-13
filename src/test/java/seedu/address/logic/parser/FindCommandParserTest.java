@@ -66,6 +66,9 @@ public class FindCommandParserTest {
         // Negative rate in find → specific message
         assertParseFailure(parser, " r/-1", Rate.MESSAGE_NEGATIVE_RATE_NOT_ALLOWED);
         assertParseFailure(parser, " r/>-1", Rate.MESSAGE_NEGATIVE_RATE_NOT_ALLOWED);
+
+        // r/<0 can never match any tutor
+        assertParseFailure(parser, " r/<0", Rate.MESSAGE_NEGATIVE_RATE_NOT_ALLOWED);
     }
 
     @Test
