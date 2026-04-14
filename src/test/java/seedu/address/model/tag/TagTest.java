@@ -21,6 +21,13 @@ public class TagTest {
     public void isValidTagName() {
         // null tag name
         assertThrows(NullPointerException.class, () -> Tag.isValidTagName(null));
+
+        // valid tag names
+        org.junit.jupiter.api.Assertions.assertTrue(Tag.isValidTagName("abc")); // short
+        org.junit.jupiter.api.Assertions.assertTrue(Tag.isValidTagName("12345678901234567890")); // exactly 20 chars
+
+        // invalid tag names
+        org.junit.jupiter.api.Assertions.assertFalse(Tag.isValidTagName("123456789012345678901")); // 21 chars
     }
 
 }
